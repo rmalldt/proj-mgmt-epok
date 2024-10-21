@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { Lock, X } from "lucide-react";
+import { Lock, LucideIcon, X } from "lucide-react";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 const Sidebar = () => {
   const [showProjects, setShowProjects] = useState(true);
@@ -37,6 +38,23 @@ const Sidebar = () => {
       </div>
     </div>
   );
+};
+
+interface SidebarLinkProps {
+  href: string;
+  icon: LucideIcon;
+  label: string;
+  isCollapsed: boolean;
+}
+
+const SidebarLink = ({
+  href,
+  icon: Icon,
+  label,
+  isCollapsed,
+}: SidebarLinkProps) => {
+  const pathName = usePathname();
+  const isActive = pathName === href;
 };
 
 export default Sidebar;

@@ -11,7 +11,7 @@ const initialState: InitialStateTypes = {
 };
 
 /**
- * globalSlice stores Dark/Light mode and Sidebar collapse/display states
+ * Stores Dark/Light mode and Sidebar collapse/display states
  */
 export const globalSlice = createSlice({
   name: "global",
