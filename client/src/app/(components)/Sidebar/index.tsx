@@ -1,27 +1,57 @@
 "use client";
 
 import React, { useState } from "react";
-import { Lock, LucideIcon, X } from "lucide-react";
+import {
+  Briefcase,
+  ChevronDown,
+  ChevronUp,
+  Home,
+  Lock,
+  LucideIcon,
+  Search,
+  Settings,
+  User,
+  Users,
+  X,
+} from "lucide-react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "@/app/redux";
+import Link from "next/link";
+import { setIsSidebarCollapsed } from "@/state";
 
 const Sidebar = () => {
   const [showProjects, setShowProjects] = useState(true);
   const [showPriority, setShowPriority] = useState(true);
 
+  const dispatch = useAppDispatch();
+
+  const isSidebarCollapsed = useAppSelector(
+    (state) => state.global.isSidebarCollapsed,
+  );
+
   return (
-    <div className="fixed z-40 flex h-full w-64 flex-col overflow-y-auto bg-white shadow-xl transition-all duration-300 dark:bg-black">
-      <div className="flex h-full w-full flex-col justify-start">
-        {/* Logo */}
+    <div
+      className={`fixed z-40 flex h-full flex-col overflow-y-auto bg-white shadow-xl transition-all duration-300 dark:bg-black ${isSidebarCollapsed ? "hidden w-0" : "w-64"} `}
+    >
+      <div className="flex h-full flex-col justify-start">
+        {/* LOGO */}
         <div className="z-50 flex min-h-[56px] w-64 items-center justify-between bg-white px-6 pt-3 dark:bg-black">
           <div className="text-xl font-bold text-gray-800 dark:text-white">
             EPOK
           </div>
-          <div className="text-xl font-bold text-gray-500 hover:text-gray-400 dark:text-white">
-            <X />
-          </div>
+          {isSidebarCollapsed ? null : (
+            <button
+              className="py-3"
+              onClick={() =>
+                dispatch(setIsSidebarCollapsed(!isSidebarCollapsed))
+              }
+            >
+              <X className="h-6 w-6 cursor-pointer text-gray-800 hover:text-gray-500 dark:text-white" />
+            </button>
+          )}
         </div>
-        {/* Team */}
+        {/* TEAM */}
         <div className="flex items-center gap-5 border-y-[1.5px] border-gray-200 px-8 py-4 dark:border-gray-700">
           <Image src="/logo.png" alt="Logo" width={50} height={50} />
           <div>
@@ -34,7 +64,41 @@ const Sidebar = () => {
             </div>
           </div>
         </div>
-        {/* Navbar Links */}
+        {/* NAVBAR LINKS */}
+        <nav className="z-10 w-full">
+          <SidebarLink icon={Home} label="Home" href="/" />
+          <SidebarLink icon={Briefcase} label="Timeline" href="/timeline" />
+          <SidebarLink icon={Search} label="Search" href="/search" />
+          <SidebarLink icon={Settings} label="Settings" href="/settings" />
+          <SidebarLink icon={User} label="Users" href="/users" />
+          <SidebarLink icon={Users} label="Teams" href="/teams" />
+        </nav>
+        {/* PROJECTS LINKS */}
+        <button
+          onClick={() => setShowProjects((prev) => !prev)}
+          className="flex items-center justify-between px-8 py-3 text-gray-500"
+        >
+          <span>Projects</span>
+          {showProjects ? (
+            <ChevronUp className="h5 w-5" />
+          ) : (
+            <ChevronDown className="h5 w-5" />
+          )}
+        </button>
+        {/* PROJECTS LISTS */}
+        {/* PRIORITIES LINKS*/}
+        <button
+          onClick={() => setShowPriority((prev) => !prev)}
+          className="flex items-center justify-between px-8 py-3 text-gray-500"
+        >
+          <span>Priorities</span>
+          {showPriority ? (
+            <ChevronUp className="h5 w-5" />
+          ) : (
+            <ChevronDown className="h5 w-5" />
+          )}
+        </button>
+        {/* PRIORITIES LIST */}
       </div>
     </div>
   );
@@ -44,17 +108,29 @@ interface SidebarLinkProps {
   href: string;
   icon: LucideIcon;
   label: string;
-  isCollapsed: boolean;
 }
 
-const SidebarLink = ({
-  href,
-  icon: Icon,
-  label,
-  isCollapsed,
-}: SidebarLinkProps) => {
-  const pathName = usePathname();
-  const isActive = pathName === href;
+const SidebarLink = ({ href, icon: Icon, label }: SidebarLinkProps) => {
+  const pathname = usePathname();
+  const isActive =
+    pathname === href || (pathname === "/" && href === "/dashboard");
+
+  return (
+    <Link href={href} className="w-full">
+      <div
+        className={`relative flex items-center gap-3 transition-colors hover:bg-gray-100 dark:bg-black dark:hover:bg-gray-700 ${isActive ? "bg-gray-100 dark:bg-gray-600" : ""} justify-start px-8 py-3`}
+      >
+        {isActive && (
+          <div className="absolute left-0 top-0 h-full w-[5px] bg-blue-200"></div>
+        )}
+
+        <Icon className="h-6 w-6 text-gray-800 dark:text-gray-100" />
+        <span className="font-medium text-gray-800 dark:text-gray-100">
+          {label}
+        </span>
+      </div>
+    </Link>
+  );
 };
 
 export default Sidebar;
