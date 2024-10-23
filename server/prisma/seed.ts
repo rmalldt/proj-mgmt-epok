@@ -53,13 +53,6 @@ async function main() {
   }
 }
 
-function foo(fileName: string) {
-  const modelName = path.basename(fileName, path.extname(fileName));
-  console.log(modelName);
-  const res = modelName.charAt(0).toUpperCase() + modelName.slice(1);
-  console.log(res);
-}
-
 main()
   .catch((e) => console.error(e))
   .finally(async () => await prisma.$disconnect());
