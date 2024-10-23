@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
  * Get the task associated with the projectId
  */
 export const getTasks = async (req: Request, res: Response): Promise<void> => {
-  const { projectId } = req.query;
+  const { projectId } = req.query; // query param
   try {
     const tasks = await prisma.task.findMany({
       where: {
@@ -71,7 +71,7 @@ export const updateTasksStatus = async (
   req: Request,
   res: Response
 ): Promise<void> => {
-  const { taskId } = req.params;
+  const { taskId } = req.params; // params
   const { status } = req.body;
   try {
     const updatedTask = await prisma.task.update({
