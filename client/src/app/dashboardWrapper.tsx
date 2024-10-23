@@ -39,8 +39,7 @@ export const DashboardLayout = ({
 
 /**
  * DashboardWrapper is created so that we can use states provided by StoreProvider
- * in the DashboardLayout and pass it to the children.
- * @param children
+ * in the DashboardLayout and also make the states accessible to the entire app.
  */
 const DashboardWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
