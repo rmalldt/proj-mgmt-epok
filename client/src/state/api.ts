@@ -86,7 +86,7 @@ export const api = createApi({
       invalidatesTags: ["Projects"], // invalidate to auto-refetch the data tagged under "Projects"
     }),
     getTasks: build.query<Task[], { projectId: number }>({
-      query: (projectId) => `tasks?projectId=${projectId}`,
+      query: ({ projectId }) => `tasks?projectId=${projectId}`,
       // Update only one specific task based on task id
       providesTags: (result) =>
         result
@@ -120,4 +120,5 @@ export const {
   useCreateProjectMutation,
   useGetTasksQuery,
   useCreateTasksMutation,
+  useUpdateTaskStatusMutation,
 } = api;
