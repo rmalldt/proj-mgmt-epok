@@ -29,7 +29,7 @@ export const DashboardLayout = ({
       <Sidebar />
       <main
         className={`flex w-full flex-col bg-gray-50 dark:bg-dark-bg ${
-          isSidebarCollapsed ? "" : "md:pl-64"
+          isSidebarCollapsed ? "" : "sm:pl-64 md:pl-64"
         }`}
       >
         <Navbar />

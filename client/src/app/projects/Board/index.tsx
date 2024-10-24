@@ -6,6 +6,7 @@ import {
 } from "@/state/api";
 import { DndProvider, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { EllipsisVertical, Plus } from "lucide-react";
 
 type BoardProps = {
   id: string;
@@ -44,7 +45,7 @@ const Board = ({ id, setIsModalNewTaskOpen }: BoardProps) => {
             status={status}
             tasks={tasks || []}
             moveTask={moveTask}
-            setIsModelNewTaskOpen={setIsModalNewTaskOpen}
+            setIsModalNewTaskOpen={setIsModalNewTaskOpen}
           />
         ))}
       </div>
@@ -56,14 +57,14 @@ type TaskColumnProps = {
   status: string;
   tasks: TaskType[];
   moveTask: (taskId: number, toStatus: string) => void;
-  setIsModelNewTaskOpen: (isOpen: boolean) => void;
+  setIsModalNewTaskOpen: (isOpen: boolean) => void;
 };
 
 const TaskColumn = ({
   status,
   tasks,
   moveTask,
-  setIsModelNewTaskOpen,
+  setIsModalNewTaskOpen,
 }: TaskColumnProps) => {
   // https://react-dnd.github.io/react-dnd/docs/api/use-drop
   const [{ isOver }, drop] = useDrop(() => ({
@@ -103,6 +104,17 @@ const TaskColumn = ({
               {tasksCount}
             </span>
           </h3>
+          <div className="flex items-center gap-1">
+            <button className="flex h-6 w-5 items-center justify-center dark:text-neutral-500">
+              <EllipsisVertical size={26} />
+            </button>
+            <button
+              className="flex h-6 w-6 items-center justify-center rounded bg-gray-200 dark:bg-dark-tertiary dark:text-white"
+              onClick={() => setIsModalNewTaskOpen(true)}
+            >
+              <Plus size={16} />
+            </button>
+          </div>
         </div>
       </div>
     </div>
