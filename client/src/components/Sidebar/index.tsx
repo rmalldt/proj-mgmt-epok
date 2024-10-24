@@ -40,7 +40,7 @@ const Sidebar = () => {
 
   return (
     <div
-      className={`fixed z-40 flex h-full flex-col overflow-y-auto bg-white shadow-xl transition-all duration-300 dark:bg-black ${isSidebarCollapsed ? "hidden w-0" : "w-64"} `}
+      className={`fixed z-40 flex h-full flex-col justify-between overflow-y-auto bg-white shadow-xl transition-all duration-300 dark:bg-black ${isSidebarCollapsed ? "hidden w-0" : "w-64"} `}
     >
       <div className="flex h-full flex-col justify-start">
         {/* LOGO */}
