@@ -17,7 +17,7 @@ type BoardProps = {
 
 const taskStatus = ["To Do", "Work In Progress", "Under Review", "Completed"];
 
-const Board = ({ id, setIsModalNewTaskOpen }: BoardProps) => {
+function Board({ id, setIsModalNewTaskOpen }: BoardProps) {
   // Redux useQuery returns Objects
   const {
     data: tasks,
@@ -53,7 +53,7 @@ const Board = ({ id, setIsModalNewTaskOpen }: BoardProps) => {
       </div>
     </DndProvider>
   );
-};
+}
 
 type TaskColumnProps = {
   status: string;
@@ -62,12 +62,12 @@ type TaskColumnProps = {
   setIsModalNewTaskOpen: (isOpen: boolean) => void;
 };
 
-const TaskColumn = ({
+function TaskColumn({
   status,
   tasks,
   moveTask,
   setIsModalNewTaskOpen,
-}: TaskColumnProps) => {
+}: TaskColumnProps) {
   // https://react-dnd.github.io/react-dnd/docs/api/use-drop
   const [{ isOver }, drop] = useDrop(() => ({
     accept: "task",
@@ -125,13 +125,13 @@ const TaskColumn = ({
         ))}
     </div>
   );
-};
+}
 
 type TaskProps = {
   task: TaskType;
 };
 
-const Task = ({ task }: TaskProps) => {
+function Task({ task }: TaskProps) {
   // https://react-dnd.github.io/react-dnd/docs/api/use-drag
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "task",
@@ -243,28 +243,39 @@ const Task = ({ task }: TaskProps) => {
       </div>
     </div>
   );
-};
+}
 
 type PriorityTagProps = {
   priority: string;
 };
 
-const PriorityTag = ({ priority }: PriorityTagProps) => (
-  <div
-    className={`rounded-full px-2 py-1 text-xs font-semibold ${
-      priority === "Urgent"
-        ? "bg-red-200 text-red-700"
-        : priority === "High"
-          ? "bg-yellow-200 text-yellow-700"
-          : priority === "Medium"
-            ? "bg-green-200 text-green-700"
-            : priority === "Low"
-              ? "bg-blue-200 text-blue-700"
-              : "bg-gray-200 text-gray-700"
-    } `}
-  >
-    {priority}
-  </div>
-);
+function PriorityTag({ priority }: PriorityTagProps) {
+  let priorityTagStyle = "";
+  switch (priority) {
+    case "Urgent":
+      priorityTagStyle = "bg-red-200 text-red-700";
+      break;
+    case "High":
+      priorityTagStyle = "bg-yellow-200 text-yellow-700";
+      break;
+    case "Medium":
+      priorityTagStyle = "bg-green-200 text-green-700";
+      break;
+    case "Low":
+      priorityTagStyle = "bg-blue-200 text-blue-700";
+      break;
+    default:
+      priorityTagStyle = "bg-gray-200 text-gray-700";
+      break;
+  }
+
+  return (
+    <div
+      className={`rounded-full px-2 py-1 text-xs font-semibold ${priorityTagStyle}`}
+    >
+      {priority}
+    </div>
+  );
+}
 
 export default Board;
