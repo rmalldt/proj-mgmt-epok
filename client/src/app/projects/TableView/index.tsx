@@ -3,6 +3,7 @@ import { useAppSelector } from "@/app/redux";
 import Header from "@/components/Header";
 import { useGetTasksQuery } from "@/state/api";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { dataGridClassNames, dataGridSxStyles } from "@/lib/utils";
 
 type Props = {
   id: string;
@@ -80,7 +81,12 @@ const TableView = ({ id, setIsModalNewTaskOpen }: Props) => {
       <div className="pt-5">
         <Header name="Table" isSmallText />
       </div>
-      <DataGrid rows={tasks || []} columns={columns} className={} sx={} />
+      <DataGrid
+        rows={tasks || []}
+        columns={columns}
+        className={dataGridClassNames}
+        sx={dataGridSxStyles(isDarkMode)}
+      />
     </div>
   );
 };
