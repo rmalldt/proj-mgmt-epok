@@ -17,7 +17,7 @@ type BoardProps = {
 
 const taskStatus = ["To Do", "Work In Progress", "Under Review", "Completed"];
 
-function Board({ id, setIsModalNewTaskOpen }: BoardProps) {
+function BoardView({ id, setIsModalNewTaskOpen }: BoardProps) {
   // Redux useQuery returns Objects
   const {
     data: tasks,
@@ -278,4 +278,4 @@ function PriorityTag({ priority }: PriorityTagProps) {
   );
 }
 
-export default Board;
+export default BoardView;
