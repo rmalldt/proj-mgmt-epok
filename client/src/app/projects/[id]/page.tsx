@@ -5,6 +5,7 @@ import ProjectHeader from "@/app/projects/ProjectHeader";
 import BoardView from "@/app/projects/BoardView";
 import ListView from "@/app/projects/ListView";
 import TimelineView from "@/app/projects/TimlineView";
+import TableView from "../TableView";
 
 type Props = {
   params: { id: string };
@@ -30,6 +31,9 @@ const Project = ({ params }: Props) => {
       )}
       {activeTab === "Timeline" && (
         <TimelineView id={id} setIsModalNewTaskOpen={setIsNewModelTaskOpen} />
+      )}
+      {activeTab === "Table" && (
+        <TableView id={id} setIsModalNewTaskOpen={setIsNewModelTaskOpen} />
       )}
     </div>
   );
