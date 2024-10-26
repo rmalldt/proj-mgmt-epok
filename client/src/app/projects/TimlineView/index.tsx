@@ -43,7 +43,6 @@ const TimelineView = ({ id, setIsModalNewTaskOpen }: Props) => {
   const handleViewModeChange = (
     event: React.ChangeEvent<HTMLSelectElement>,
   ) => {
-    console.log(event);
     setDisplayOptions((prev) => ({
       ...prev,
       viewMode: event.target.value as ViewMode,
@@ -84,7 +83,10 @@ const TimelineView = ({ id, setIsModalNewTaskOpen }: Props) => {
           />
         </div>
         <div className="px-4 pb-5 pt-1">
-          <button className="flex items-center rounded bg-blue-primary px-3 py-2 text-white hover:bg-blue-600">
+          <button
+            className="flex items-center rounded bg-blue-primary px-3 py-2 text-white hover:bg-blue-600"
+            onClick={() => setIsModalNewTaskOpen(true)}
+          >
             Add New Task
           </button>
         </div>
