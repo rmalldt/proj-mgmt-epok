@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 
-/* Connect to database */
 const prisma = new PrismaClient();
 
 export const getProjects = async (

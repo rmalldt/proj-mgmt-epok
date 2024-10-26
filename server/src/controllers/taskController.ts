@@ -3,9 +3,7 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-/**
- * Get the task associated with the projectId
- */
+// Get the task associated with the projectId
 export const getTasks = async (req: Request, res: Response): Promise<void> => {
   const { projectId } = req.query; // query param
   try {

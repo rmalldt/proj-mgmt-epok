@@ -73,10 +73,17 @@ export interface SearchResults {
   users?: User[];
 }
 
+export interface Team {
+  teamId: number;
+  teamName: string;
+  productOwnerUserId?: number;
+  projectManagerUserId?: number;
+}
+
 export const api = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL }), // base URL
   reducerPath: "api",
-  tagTypes: ["Projects", "Tasks"], // tags to identify cached data on FE used to invalidate cached data later
+  tagTypes: ["Projects", "Tasks", "Users", "Teams"], // tags to identify cached data on FE used to invalidate cached data later
   endpoints: (build) => ({
     // API requests to the endpoints to fetch data (TS Prisma schema) from backend
     getProjects: build.query<Project[], void>({
@@ -121,6 +128,14 @@ export const api = createApi({
     search: build.query<SearchResults, string>({
       query: (query) => `search?query=${query}`,
     }),
+    getUsers: build.query<User[], void>({
+      query: () => "users",
+      providesTags: ["Users"],
+    }),
+    getTeams: build.query<Team[], void>({
+      query: () => "teams",
+      providesTags: ["Teams"],
+    }),
   }),
 });
 
@@ -131,4 +146,6 @@ export const {
   useCreateTasksMutation,
   useUpdateTaskStatusMutation,
   useSearchQuery,
+  useGetUsersQuery,
+  useGetTeamsQuery,
 } = api;
