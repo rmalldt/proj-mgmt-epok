@@ -34,11 +34,11 @@ const Project = ({ params }: Props) => {
       {activeTab === "List" && (
         <ListView id={id} setIsModalNewTaskOpen={setIsNewModelTaskOpen} />
       )}
-      {activeTab === "Timeline" && (
-        <TimelineView id={id} setIsModalNewTaskOpen={setIsNewModelTaskOpen} />
-      )}
       {activeTab === "Table" && (
         <TableView id={id} setIsModalNewTaskOpen={setIsNewModelTaskOpen} />
+      )}
+      {activeTab === "Timeline" && (
+        <TimelineView id={id} setIsModalNewTaskOpen={setIsNewModelTaskOpen} />
       )}
     </div>
   );

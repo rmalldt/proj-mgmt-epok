@@ -214,7 +214,7 @@ function Task({ task }: TaskProps) {
           <div className="flex -space-x-[6px] overflow-hidden">
             {task.assignee && (
               <Image
-                key={task.assignee.userId}
+                key="assignee"
                 src={`/${task.assignee.profilePictureUrl!}`}
                 alt={task.assignee.username}
                 width={30}
@@ -224,7 +224,7 @@ function Task({ task }: TaskProps) {
             )}
             {task.author && (
               <Image
-                key={task.author.userId}
+                key="author"
                 src={`/${task.author.profilePictureUrl!}`}
                 alt={task.author.username}
                 width={30}

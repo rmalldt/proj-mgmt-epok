@@ -48,14 +48,14 @@ const ProjectHeader = ({ activeTab, setActiveTab }: Props) => {
             setActiveTab={setActiveTab}
           />
           <TabButton
-            name="Timeline"
-            icon={<Clock className="h-5 w-5" />}
+            name="Table"
+            icon={<Table className="h-5 w-5" />}
             activeTab={activeTab}
             setActiveTab={setActiveTab}
           />
           <TabButton
-            name="Table"
-            icon={<Table className="h-5 w-5" />}
+            name="Timeline"
+            icon={<Clock className="h-5 w-5" />}
             activeTab={activeTab}
             setActiveTab={setActiveTab}
           />
