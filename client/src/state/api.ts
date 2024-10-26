@@ -51,15 +51,15 @@ export interface Task {
   id: number;
   title: string;
   description?: string;
-  status?: string;
-  priority?: string;
+  status?: Status;
+  priority?: Priority;
   tags?: string;
   startDate?: string;
   dueDate?: string;
   points?: number;
-  projectId: string;
-  authorUserId: string;
-  assignedUserId?: string;
+  projectId: number;
+  authorUserId: number;
+  assignedUserId?: number;
 
   author?: User;
   assignee?: User;

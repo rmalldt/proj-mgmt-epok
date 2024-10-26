@@ -27,7 +27,7 @@ const ProjectHeader = ({ activeTab, setActiveTab }: Props) => {
               onClick={() => setIsModalNewProjectOpen(true)}
             >
               <PlusSquare className="mr-2 h-5 w-5" />
-              New Board
+              New Boards
             </button>
           }
         />
