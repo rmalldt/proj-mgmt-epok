@@ -33,7 +33,6 @@ export const getSearch = async (req: Request, res: Response): Promise<void> => {
         OR: [{ username: { contains: query as string, mode: 'insensitive' } }],
       },
     });
-    console.log(tasks, projects, users);
     res.json({ tasks, projects, users });
   } catch (err: any) {
     res

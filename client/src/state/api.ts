@@ -61,7 +61,7 @@ export interface Task {
   authorUserId: number;
   assignedUserId?: number;
 
-  author?: User;
+  author: User;
   assignee?: User;
   comments?: Comment[];
   attachments?: Attachment[];
@@ -106,6 +106,13 @@ export const api = createApi({
           ? result.map(({ id }) => ({ type: "Tasks" as const, id }))
           : [{ type: "Tasks" as const }],
     }),
+    getTasksByUser: build.query<Task[], number>({
+      query: (userId) => `tasks/user/${userId}`,
+      providesTags: (result, error, userId) =>
+        result
+          ? result.map(({ id }) => ({ type: "Tasks", id }))
+          : [{ type: "Tasks", id: userId }],
+    }),
     createTasks: build.mutation<Task, Partial<Task>>({
       query: (task) => ({
         url: "tasks",
@@ -143,6 +150,7 @@ export const {
   useGetProjectsQuery,
   useCreateProjectMutation,
   useGetTasksQuery,
+  useGetTasksByUserQuery,
   useCreateTasksMutation,
   useUpdateTaskStatusMutation,
   useSearchQuery,

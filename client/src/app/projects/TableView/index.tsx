@@ -61,7 +61,7 @@ const columns: GridColDef[] = [
     field: "assignee",
     headerName: "Assignee",
     width: 150,
-    renderCell: (params) => params.value.username || "Unknown",
+    renderCell: (params) => params.value?.username || "Not Assigned",
   },
 ];
 

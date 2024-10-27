@@ -6,10 +6,10 @@ import { formatISO } from "date-fns";
 type Props = {
   isOpen: boolean;
   onClose: () => void;
-  id: string;
+  id?: string | null;
 };
 
-const ModalNewTask = ({ isOpen, onClose, id }: Props) => {
+const ModalNewTask = ({ isOpen, onClose, id = null }: Props) => {
   const [createTask, { isLoading }] = useCreateTasksMutation();
 
   const [title, setTitle] = useState("");
@@ -21,9 +21,10 @@ const ModalNewTask = ({ isOpen, onClose, id }: Props) => {
   const [dueDate, setDueDate] = useState("");
   const [authorUserId, setAuthorUserId] = useState("");
   const [assignedUserId, setAssignedUserId] = useState("");
+  const [projectId, setProjectId] = useState("");
 
   const handleSumbit = async () => {
-    if (!title || !authorUserId) return;
+    if (!title || !authorUserId || !(id !== null || projectId)) return;
 
     const formattedStartDate = formatISO(new Date(startDate), {
       representation: "complete",
@@ -40,7 +41,7 @@ const ModalNewTask = ({ isOpen, onClose, id }: Props) => {
       tags,
       startDate: formattedStartDate,
       dueDate: formattedDueDate,
-      projectId: Number(id),
+      projectId: id !== null ? Number(id) : Number(projectId),
       authorUserId: parseInt(authorUserId),
       assignedUserId: parseInt(assignedUserId),
     });
@@ -57,7 +58,7 @@ const ModalNewTask = ({ isOpen, onClose, id }: Props) => {
   };
 
   const isFormValid = () => {
-    return title && authorUserId;
+    return title && authorUserId && !(id !== null || projectId);
   };
 
   const inputStyles =
@@ -158,6 +159,15 @@ const ModalNewTask = ({ isOpen, onClose, id }: Props) => {
           value={assignedUserId}
           onChange={(e) => setAssignedUserId(e.target.value)}
         />
+        {id === null && (
+          <input
+            type="number"
+            className={inputStyles}
+            placeholder="Project ID"
+            value={projectId}
+            onChange={(e) => setProjectId(e.target.value)}
+          />
+        )}
         <button
           type="submit"
           className={`mt-4 w-full justify-center rounded-md border-transparent bg-blue-primary px-4 py-2 font-medium text-white shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 ${
