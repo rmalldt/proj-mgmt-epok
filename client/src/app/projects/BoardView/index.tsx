@@ -4,11 +4,21 @@ import {
   useGetTasksQuery,
   useUpdateTaskStatusMutation,
 } from "@/state/api";
-import { DndProvider, useDrag, useDrop } from "react-dnd";
+import {
+  DndProvider,
+  DragSourceMonitor,
+  DropTargetMonitor,
+  useDrag,
+  useDrop,
+} from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { EllipsisVertical, MessageSquareMore, Plus } from "lucide-react";
 import { format } from "date-fns";
 import Image from "next/image";
+
+interface StatusColors {
+  [prop: string]: string;
+}
 
 type BoardProps = {
   id: string;
@@ -70,12 +80,12 @@ function TaskColumn({
   const [{ isOver }, drop] = useDrop(() => ({
     accept: "task",
     drop: (item: { id: number }) => moveTask(item.id, status),
-    collect: (monitor: any) => ({ isOver: !!monitor.isOver() }),
+    collect: (monitor: DropTargetMonitor) => ({ isOver: !!monitor.isOver() }),
   }));
 
   const tasksCount = tasks.filter((task) => task.status === status).length;
 
-  const statusColor: any = {
+  const statusColor: StatusColors = {
     "To Do": "#2563EB",
     "Work In Progress": "#059669",
     "Under Review": "#D97706",
@@ -134,7 +144,9 @@ function Task({ task }: TaskProps) {
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "task",
     item: { id: task.id },
-    collect: (monitor: any) => ({ isDragging: !!monitor.isDragging() }),
+    collect: (monitor: DragSourceMonitor) => ({
+      isDragging: !!monitor.isDragging(),
+    }),
   }));
 
   const taskTagsSplit = task.tags ? task.tags.split(",") : [];
