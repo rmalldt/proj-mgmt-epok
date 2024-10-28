@@ -18,8 +18,6 @@ const Timeline = () => {
     locale: "en-GB",
   });
 
-  console.log("Display Options", displayOptions);
-
   const ganttTasks = useMemo(() => {
     return (
       projects?.map((project) => ({

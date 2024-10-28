@@ -52,9 +52,16 @@ const rootReducer = combineReducers({
   global: globalReducer,
   [api.reducerPath]: api.reducer,
 });
+// Enhanced reducer with the configuration to persist the rootReducer on local storage
+// 	- React Toolkit uses persistReducer to wrap the root reducer
+// 	- This persistedReducer is applied in the configureStore
+// 	- <PersistGate> in the StoreProvider serves as barrier keeping the app from rendering until the state has been rehydrated
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-/* REDUX STORE */
+/*
+ * REDUX STORE: Used to create store instance per-request.
+ * https://redux.js.org/usage/nextjs#introduction
+ */
 export const makeStore = () => {
   return configureStore({
     reducer: persistedReducer,
@@ -67,20 +74,24 @@ export const makeStore = () => {
   });
 };
 
-/* REDUX TYPES */
+// Infer Rootstate and AppDispatch types to be used across Application from makeStore return type.
 export type AppStore = ReturnType<typeof makeStore>;
 export type RootState = ReturnType<AppStore["getState"]>;
 export type AppDispatch = AppStore["dispatch"];
 export const useAppDispatch = () => useDispatch<AppDispatch>();
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
-/* PROVIDER */
+/*
+ * PROVIDER: Client component that creates and provides the store.
+ * https://github.com/rt2zz/redux-persist?tab=readme-ov-file#basic-usage
+ */
 export default function StoreProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const storeRef = useRef<AppStore>();
+  // Ensure the store is only create once per request
   if (!storeRef.current) {
     storeRef.current = makeStore();
     setupListeners(storeRef.current.dispatch);

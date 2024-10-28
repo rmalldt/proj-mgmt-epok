@@ -25,8 +25,6 @@ function BoardView({ id, setIsModalNewTaskOpen }: BoardProps) {
     error,
   } = useGetTasksQuery({ projectId: Number(id) });
 
-  console.log(tasks);
-
   // Redux useMutation returns array of functions and will trigger API call
   // when one of the returned function is called
   const [updateTaskStatus] = useUpdateTaskStatusMutation();

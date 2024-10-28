@@ -15,8 +15,6 @@ const ListView = ({ id, setIsModalNewTaskOpen }: Props) => {
     error,
   } = useGetTasksQuery({ projectId: Number(id) });
 
-  console.log(tasks);
-
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>An error occured while fetching tasks</div>;
 

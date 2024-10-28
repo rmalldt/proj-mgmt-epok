@@ -24,8 +24,6 @@ const TimelineView = ({ id, setIsModalNewTaskOpen }: Props) => {
     locale: "en-GB",
   });
 
-  console.log("Display Options", displayOptions);
-
   const ganttTasks = useMemo(() => {
     return (
       tasks?.map((task) => ({
