@@ -1,4 +1,19 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import {
+  BaseQueryError,
+  createApi,
+  fetchBaseQuery,
+  FetchBaseQueryError,
+  FetchBaseQueryMeta,
+  QueryReturnValue,
+} from "@reduxjs/toolkit/query/react";
+import {
+  AuthError,
+  AuthUser,
+  fetchAuthSession,
+  getCurrentUser,
+  GetCurrentUserOutput,
+} from "aws-amplify/auth";
+import { UserInfo } from "os";
 
 export interface Project {
   id: number;
@@ -80,11 +95,76 @@ export interface Team {
   projectManagerUserId?: number;
 }
 
+export interface UserAuthInfo {
+  user: AuthUser;
+  userSub: string | undefined;
+  userDetails: User;
+}
+
 export const api = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL }), // base URL
   reducerPath: "api",
   tagTypes: ["Projects", "Tasks", "Users", "Teams"], // tags to identify cached data on FE used to invalidate cached data later
   endpoints: (build) => ({
+    getAuthUser: build.query<UserAuthInfo, void>({
+      queryFn: async (_, _queryApi, _extraoptions, fetchWithBQ) => {
+        // Request1: Retrieve information from Cognito User Pool
+        // Call the API with Cognito User Pool URL
+        const user = await getCurrentUser();
+        const session = await fetchAuthSession();
+
+        if (!session)
+          return {
+            error: {
+              data: (session as AuthError).cause,
+              status: 500,
+              statusTex: (session as AuthError).message,
+            },
+          };
+
+        const { userSub } = session; // cognito ID
+        const { accessToken } = session.tokens ?? {};
+
+        // Request2: Retrive information fro RDS
+        // Call the API with Base URL
+        const userDetailsResponse = await fetchWithBQ(`users/${userSub}`);
+
+        if (userDetailsResponse.error)
+          return { error: userDetailsResponse.error };
+
+        return {
+          data: {
+            user,
+            userSub,
+            userDetails: userDetailsResponse.data as User,
+          },
+        };
+      },
+    }),
+
+    // getAuthUser: build.query({
+    //   queryFn: async (_, _queryApi, _extraoptions, fetchWithBQ) => {
+    //     try {
+    //       // Request1: Retrieve information from Cognito User Pool
+    //       // Call the API with Cognito User Pool URL
+    //       const user = await getCurrentUser();
+    //       const session = await fetchAuthSession();
+    //       if (!session) throw new Error("No session found");
+    //       const { userSub } = session; // cognito ID
+    //       const { accessToken } = session.tokens ?? {};
+
+    //       // Request2: Retrive information fro RDS
+    //       // Call the API with Base URL
+    //       const userDetailsResponse = await fetchWithBQ(`users/${userSub}`);
+    //       const userDetails = userDetailsResponse.data as User;
+
+    //       return { data: { user, userSub, userDetails } };
+    //     } catch (error: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) {
+    //       return { error: error.message || "Couldn't fetch user data" };
+    //     }
+    //   },
+    // }),
+
     // API requests to the endpoints to fetch data (TS Prisma schema) from backend
     getProjects: build.query<Project[], void>({
       query: () => "projects",
@@ -147,6 +227,7 @@ export const api = createApi({
 });
 
 export const {
+  useGetAuthUserQuery,
   useGetProjectsQuery,
   useCreateProjectMutation,
   useGetTasksQuery,

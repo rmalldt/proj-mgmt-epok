@@ -24,7 +24,8 @@ import { usePathname } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/app/redux";
 import Link from "next/link";
 import { setIsSidebarCollapsed } from "@/state";
-import { useGetProjectsQuery } from "@/state/api";
+import { useGetAuthUserQuery, useGetProjectsQuery } from "@/state/api";
+import { signOut } from "aws-amplify/auth";
 
 const Sidebar = () => {
   const [showProjects, setShowProjects] = useState(true);
@@ -35,6 +36,21 @@ const Sidebar = () => {
   const isSidebarCollapsed = useAppSelector(
     (state) => state.global.isSidebarCollapsed,
   );
+
+  const { data: currentUser } = useGetAuthUserQuery();
+
+  console.log(currentUser);
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+    } catch (error) {
+      console.log("Error signing out: ", error);
+    }
+  };
+
+  if (!currentUser) return null;
+  const currentUserDetails = currentUser?.userDetails;
 
   return (
     <div
@@ -104,7 +120,7 @@ const Sidebar = () => {
               icon={Briefcase}
               label={project.name}
               href={`/projects/${project.id}`}
-            ></SidebarLink>
+            />
           ))}
         {/* PRIORITIES LINKS*/}
         <button
@@ -118,32 +134,64 @@ const Sidebar = () => {
             <ChevronDown className="h5 w-5" />
           )}
         </button>
-        {/* PRIORITIES LIST */}
-        {showPriority && (
-          <>
-            <SidebarLink
-              icon={AlertCircle}
-              label="Urgent"
-              href="/priority/urgent"
-            />
-            <SidebarLink
-              icon={ShieldAlert}
-              label="High"
-              href="/priority/high"
-            />
-            <SidebarLink
-              icon={AlertTriangle}
-              label="Medium"
-              href="/priority/medium"
-            />
-            <SidebarLink icon={AlertOctagon} label="Low" href="/priority/low" />
-            <SidebarLink
-              icon={Layers3}
-              label="Backlog"
-              href="/priority/backlog"
-            />
-          </>
-        )}
+        <div className="pb-10">
+          {/* PRIORITIES LIST */}
+          {showPriority && (
+            <>
+              <SidebarLink
+                icon={AlertCircle}
+                label="Urgent"
+                href="/priority/urgent"
+              />
+              <SidebarLink
+                icon={ShieldAlert}
+                label="High"
+                href="/priority/high"
+              />
+              <SidebarLink
+                icon={AlertTriangle}
+                label="Medium"
+                href="/priority/medium"
+              />
+              <SidebarLink
+                icon={AlertOctagon}
+                label="Low"
+                href="/priority/low"
+              />
+              <SidebarLink
+                icon={Layers3}
+                label="Backlog"
+                href="/priority/backlog"
+              />
+            </>
+          )}
+        </div>
+        <div className="z-10 flex w-full flex-col items-center justify-center gap-4 bg-white px-8 py-2 pb-10 dark:bg-black md:hidden">
+          <div className="flex w-full items-center">
+            <div className="flex h-9 w-9 items-center justify-center">
+              {!!currentUserDetails?.profilePictureUrl ? (
+                <Image
+                  src={`https://evok-s3-images.s3.us-east-1.amazonaws.com/${currentUserDetails?.profilePictureUrl}`}
+                  alt={currentUserDetails?.username || "User Profile Picture"}
+                  width={100}
+                  height={50}
+                  className="h-full rounded-full object-cover"
+                />
+              ) : (
+                <User className="h-6 w-6 cursor-pointer self-center rounded-full dark:text-white" />
+              )}
+            </div>
+            <span className="mx-3 text-gray-800 dark:text-white">
+              {currentUserDetails?.username}
+            </span>
+          </div>
+          <button
+            className="self-start rounded bg-blue-400 px-4 py-2 text-xs font-bold text-white hover:bg-blue-500 md:block"
+            onClick={handleSignOut}
+          >
+            Sign out
+          </button>
+        </div>
       </div>
     </div>
   );
