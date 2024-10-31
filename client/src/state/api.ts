@@ -108,8 +108,9 @@ export const api = createApi({
   endpoints: (build) => ({
     getAuthUser: build.query<UserAuthInfo, void>({
       queryFn: async (_, _queryApi, _extraoptions, fetchWithBQ) => {
+        console.log("FETCH_USER_INFO");
         // Request1: Retrieve information from Cognito User Pool
-        // Call the API with Cognito User Pool URL
+        // Call the API with Cognito User Pool ID URL
         const user = await getCurrentUser();
         const session = await fetchAuthSession();
 

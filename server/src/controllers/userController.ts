@@ -24,14 +24,14 @@ export const getUser = async (req: Request, res: Response): Promise<void> => {
         cognitoId: cognitoId,
       },
     });
-    console.log('GET_USER', cognitoId, user);
+    console.log('Fetched user:', cognitoId, user);
     res.json(user);
   } catch (err: any) {
     res.status(500).json({ message: `'Error retrieving user: ${err.message}` });
   }
 };
 
-// This function will be triggered when a new user signs up
+// This function is triggered by AWS lambda after user signup is complete
 export const postUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const {
@@ -49,7 +49,7 @@ export const postUser = async (req: Request, res: Response): Promise<void> => {
         teamId,
       },
     });
-    console.log('CREATE_USER', cognitoId, username);
+    console.log('New user created: ', cognitoId, username);
     res.json({
       message: 'User created successfully',
       newUser,
