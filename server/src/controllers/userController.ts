@@ -55,6 +55,7 @@ export const postUser = async (req: Request, res: Response): Promise<void> => {
       newUser,
     });
   } catch (err: any) {
+    console.log('ERROR creating user');
     res
       .status(500)
       .json({ message: `'Error creating new user: ${err.message}` });
