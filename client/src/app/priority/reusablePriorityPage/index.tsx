@@ -5,7 +5,12 @@ import Header from "@/components/Header";
 import ModalNewTask from "@/components/ModalNewTask";
 import TaskCard from "@/components/TaskCard";
 import { dataGridClassNames, dataGridSxStyles } from "@/lib/utils";
-import { Priority, Task, useGetTasksByUserQuery } from "@/state/api";
+import {
+  Priority,
+  Task,
+  useGetAuthUserQuery,
+  useGetTasksByUserQuery,
+} from "@/state/api";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import React, { useState } from "react";
 
@@ -72,9 +77,8 @@ function PriorityPage({ priority }: Props) {
   const [view, setView] = useState("list");
   const [isModelNewTaskOpen, setIsModelNewTaskOpen] = useState(false);
 
-  // Hard coded userId
-  // Later the userId will be fetched from separate Auth server
-  const userId = 1;
+  const { data: currentUser } = useGetAuthUserQuery();
+  const userId = currentUser?.userDetails?.userId ?? null;
 
   const {
     data: tasks,
