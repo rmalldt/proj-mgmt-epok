@@ -39,8 +39,6 @@ const Sidebar = () => {
 
   const { data: currentUser } = useGetAuthUserQuery();
 
-  console.log(currentUser);
-
   const handleSignOut = async () => {
     try {
       await signOut();

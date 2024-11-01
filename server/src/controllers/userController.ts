@@ -24,7 +24,6 @@ export const getUser = async (req: Request, res: Response): Promise<void> => {
         cognitoId: cognitoId,
       },
     });
-    console.log('Fetched user:', cognitoId, user);
     res.json(user);
   } catch (err: any) {
     res.status(500).json({ message: `'Error retrieving user: ${err.message}` });
@@ -37,8 +36,8 @@ export const postUser = async (req: Request, res: Response): Promise<void> => {
     const {
       username,
       cognitoId,
-      profilePictureUrl = 'p10.jpeg',
-      teamId = 1,
+      profilePictureUrl,
+      teamId,
     } = req.body;
 
     const newUser = await prisma.user.create({
@@ -49,13 +48,11 @@ export const postUser = async (req: Request, res: Response): Promise<void> => {
         teamId,
       },
     });
-    console.log('New user created: ', cognitoId, username);
     res.json({
       message: 'User created successfully',
       newUser,
     });
   } catch (err: any) {
-    console.log('ERROR creating user');
     res
       .status(500)
       .json({ message: `'Error creating new user: ${err.message}` });
