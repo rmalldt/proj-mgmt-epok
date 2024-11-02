@@ -1,8 +1,8 @@
-# EC2 Setup Instructions
+## EC2 Setup Instructions
 
-## 1. Connect to EC2 instance via EC2 instance Connect
+### 1. Connect to EC2 instance via EC2 instance Connect
 
-## 2. Install Node Version Manager (nvm) and Node.js
+### 2. Install Node Version Manager (nvm) and Node.js
 
 - **Switch to superuser and install nvm:**
 
@@ -31,7 +31,7 @@ node -v
 npm -v
 ```
 
-## 3. Install Git
+### 3. Install Git
 
 - **Update the system and install Git:**
 
@@ -75,7 +75,7 @@ echo "PORT=80" > .env
 npm run dev
 ```
 
-## 4. Install [pm2](https://pm2.keymetrics.io/docs/usage/quick-start/) (Producuction Process Manager for Node.js)
+### 4. Install [pm2](https://pm2.keymetrics.io/docs/usage/quick-start/) (Producuction Process Manager for Node.js)
 
 - **Install pm2 globally**
 
