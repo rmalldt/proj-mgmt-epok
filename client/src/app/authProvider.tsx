@@ -1,8 +1,15 @@
-import { Authenticator, AuthenticatorProps } from "@aws-amplify/ui-react";
+import {
+  Authenticator,
+  AuthenticatorProps,
+  useTheme,
+  View,
+} from "@aws-amplify/ui-react";
 import { Amplify } from "aws-amplify";
 import { AuthUser } from "aws-amplify/auth";
-import React from "react";
+import React, { useState } from "react";
 import "@aws-amplify/ui-react/styles.css";
+import Link from "next/link";
+import Image from "next/image";
 
 Amplify.configure({
   Auth: {
@@ -43,12 +50,51 @@ const formFields = {
   },
 };
 
-const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+const AuthProvider = ({
+  children,
+  onHandleIsGuest,
+}: {
+  children: React.ReactNode;
+  onHandleIsGuest: (isGuest: boolean) => void;
+}) => {
   return (
     <div>
       <Authenticator
         formFields={formFields}
-        className="absolute inset-0 flex items-center justify-center bg-slate-700"
+        components={{
+          Header() {
+            const { tokens } = useTheme();
+
+            return (
+              <View
+                textAlign="center"
+                padding={tokens.space.large}
+                className="ml-40"
+              >
+                <Image
+                  alt="Amplify logo"
+                  src="https://evok-s3-images.s3.us-east-1.amazonaws.com/logo.png"
+                  width={100}
+                  height={50}
+                />
+              </View>
+            );
+          },
+          Footer() {
+            const { tokens } = useTheme();
+            return (
+              <div>
+                <button
+                  className="hover:bg-auth-btn-hover bg-dark bottom-[0px] my-5 rounded-[4px] border-none bg-black px-3 py-[8.5px] text-base font-semibold text-white"
+                  onClick={() => onHandleIsGuest(true)}
+                >
+                  Login as Guest
+                </button>
+              </div>
+            );
+          },
+        }}
+        className="absolute left-[50%] top-[5%] translate-x-[-50%]"
       >
         {({ user }: { user?: AuthUser }) =>
           user ? (

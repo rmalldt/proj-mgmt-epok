@@ -1,16 +1,21 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
-import StoreProvider, { useAppSelector } from "@/app/redux";
+import StoreProvider, { useAppDispatch, useAppSelector } from "@/app/redux";
 import AuthProvider from "./authProvider";
+import { setIsGuestUser } from "@/state";
 
 export const DashboardLayout = ({
   children,
+  isGuest,
 }: {
   children: React.ReactNode;
+  isGuest: boolean;
 }) => {
+  const dispatch = useAppDispatch();
+
   const isSidebarCollapsed = useAppSelector(
     (state) => state.global.isSidebarCollapsed,
   );
@@ -23,7 +28,11 @@ export const DashboardLayout = ({
     } else {
       document.documentElement.classList.remove("dark");
     }
-  });
+  }, [isDarkMode]);
+
+  useEffect(() => {
+    dispatch(setIsGuestUser(isGuest));
+  }, [dispatch, isGuest]);
 
   return (
     <div className="flex min-h-screen w-full bg-gray-50 text-gray-900">
@@ -45,10 +54,16 @@ export const DashboardLayout = ({
  * in the DashboardLayout and also make the states accessible to the entire app.
  */
 const DashboardWrapper = ({ children }: { children: React.ReactNode }) => {
-  return (
+  const [isGuest, setIsGuest] = useState(false);
+
+  return isGuest ? (
     <StoreProvider>
-      <AuthProvider>
-        <DashboardLayout>{children}</DashboardLayout>
+      <DashboardLayout isGuest={isGuest}>{children}</DashboardLayout>
+    </StoreProvider>
+  ) : (
+    <StoreProvider>
+      <AuthProvider onHandleIsGuest={setIsGuest}>
+        <DashboardLayout isGuest={isGuest}>{children}</DashboardLayout>
       </AuthProvider>
     </StoreProvider>
   );

@@ -113,8 +113,17 @@ export const api = createApi({
   reducerPath: "api",
   tagTypes: ["Projects", "Tasks", "Users", "Teams"], // tags to identify cached data on FE used to invalidate cached data later
   endpoints: (build) => ({
-    getAuthUser: build.query<UserAuthInfo, void>({
-      queryFn: async (_arg, _queryApi, _extraoptions, fetchWithBQ) => {
+    getAuthUser: build.query<UserAuthInfo, boolean>({
+      queryFn: async (isGuest, _queryApi, _extraoptions, fetchWithBQ) => {
+        if (isGuest)
+          return {
+            error: {
+              data: "",
+              status: 401,
+              statusText: "",
+            },
+          };
+
         // Request1: Get current user and user session from Cognito User Pool
         // Call the API with Cognito User Pool ID URL
         const user = await getCurrentUser();
@@ -125,7 +134,7 @@ export const api = createApi({
             error: {
               data: (session as AuthError).cause,
               status: 500,
-              statusTex: (session as AuthError).message,
+              statusText: (session as AuthError).message,
             },
           };
 

@@ -31,13 +31,16 @@ const Sidebar = () => {
   const [showProjects, setShowProjects] = useState(true);
   const [showPriority, setShowPriority] = useState(true);
 
+  const isGuest = useAppSelector((state) => state.global.isGuest);
   const { data: projects } = useGetProjectsQuery();
   const dispatch = useAppDispatch();
   const isSidebarCollapsed = useAppSelector(
     (state) => state.global.isSidebarCollapsed,
   );
 
-  const { data: currentUser } = useGetAuthUserQuery();
+  console.log("SIDEBAR", isGuest);
+
+  const { data: currentUser } = useGetAuthUserQuery(isGuest);
 
   const handleSignOut = async () => {
     try {
@@ -47,7 +50,7 @@ const Sidebar = () => {
     }
   };
 
-  if (!currentUser) return null;
+  if (!currentUser && !isGuest) return null;
   const currentUserDetails = currentUser?.userDetails;
 
   return (

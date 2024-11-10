@@ -13,10 +13,12 @@ const Navbar = () => {
   const isSidebarCollapsed = useAppSelector(
     (state) => state.global.isSidebarCollapsed,
   );
-
   const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
+  const isGuest = useAppSelector((state) => state.global.isGuest);
 
-  const { data: currentUser } = useGetAuthUserQuery();
+  console.log("NAV", isGuest);
+
+  const { data: currentUser } = useGetAuthUserQuery(isGuest);
 
   const handleSignOut = async () => {
     try {
@@ -26,7 +28,7 @@ const Navbar = () => {
     }
   };
 
-  if (!currentUser) return null;
+  if (!currentUser && !isGuest) return null;
   const currentUserDetails = currentUser?.userDetails;
 
   return (
