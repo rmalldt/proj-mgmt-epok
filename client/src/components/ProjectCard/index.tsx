@@ -7,7 +7,7 @@ type Props = {
 
 const ProjectCard = ({ project }: Props) => {
   return (
-    <div className="rounded border p-4 shadow">
+    <div className="mb-3 rounded border p-4 shadow dark:bg-dark-secondary dark:text-white">
       <h3>{project.name}</h3>
       <p>{project.description}</p>
       <p>Start Date: {project.startDate}</p>

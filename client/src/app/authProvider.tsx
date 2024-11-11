@@ -69,7 +69,7 @@ const AuthProvider = ({
               <View
                 textAlign="center"
                 padding={tokens.space.large}
-                className="ml-40"
+                className="absolute left-[50%] -mt-40 -translate-x-[50%]"
               >
                 <Image
                   alt="Epok logo"

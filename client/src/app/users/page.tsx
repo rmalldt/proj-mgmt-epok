@@ -34,9 +34,9 @@ const columns: GridColDef[] = [
           <Image
             src={`https://evok-s3-images.s3.us-east-1.amazonaws.com/${params.value}`}
             alt={params.row.username}
-            width={100}
+            width={50}
             height={50}
-            className="h-full rounded-full object-cover"
+            className="h-full rounded-full object-cover object-top"
           />
         </div>
       </div>

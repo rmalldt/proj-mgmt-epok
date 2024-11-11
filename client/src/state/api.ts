@@ -10,7 +10,6 @@ import {
   getCurrentUser,
   GetCurrentUserOutput,
 } from "aws-amplify/auth";
-import { UserInfo } from "os";
 
 export interface Project {
   id: number;

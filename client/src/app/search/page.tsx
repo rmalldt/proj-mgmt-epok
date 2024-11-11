@@ -10,6 +10,7 @@ import UserCard from "@/components/UserCard";
 
 function Search() {
   const [searchTerm, setSearchTerm] = useState("");
+
   const {
     data: searchResults,
     isLoading,

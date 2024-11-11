@@ -26,6 +26,7 @@ import Link from "next/link";
 import { setIsGuestUser, setIsSidebarCollapsed } from "@/state";
 import { useGetAuthUserQuery, useGetProjectsQuery } from "@/state/api";
 import { signOut } from "aws-amplify/auth";
+import useMediaQueryMatch from "@/hooks/useMediaQueryMatch";
 
 const Sidebar = () => {
   const [showProjects, setShowProjects] = useState(true);
@@ -218,6 +219,8 @@ interface SidebarLinkProps {
 
 const SidebarLink = ({ href, icon: Icon, label }: SidebarLinkProps) => {
   const pathname = usePathname();
+  const dispatch = useAppDispatch();
+  const isSm = useMediaQueryMatch("sm");
   const isActive =
     pathname === href || (pathname === "/" && href === "/dashboard");
 
@@ -225,6 +228,11 @@ const SidebarLink = ({ href, icon: Icon, label }: SidebarLinkProps) => {
     <Link href={href} className="w-full">
       <div
         className={`relative flex items-center gap-3 transition-colors hover:bg-gray-100 dark:bg-black dark:hover:bg-gray-700 ${isActive ? "bg-gray-100 dark:bg-gray-600" : ""} justify-start px-8 py-3`}
+        onClick={() => {
+          if (isSm) {
+            dispatch(setIsSidebarCollapsed(true));
+          }
+        }}
       >
         {isActive && (
           <div className="absolute left-0 top-0 h-full w-[5px] bg-blue-200"></div>

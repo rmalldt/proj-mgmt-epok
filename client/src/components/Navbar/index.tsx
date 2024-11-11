@@ -52,6 +52,9 @@ const Navbar = () => {
             className="w-full rounded border-none bg-gray-100 p-2 pl-8 placeholder-gray-500 focus:border-transparent focus:outline-none dark:bg-gray-700 dark:text-white dark:placeholder-white"
             type="search"
             placeholder="Search..."
+            onClick={() => {
+              console.log("SEARCH");
+            }}
           />
         </div>
       </div>

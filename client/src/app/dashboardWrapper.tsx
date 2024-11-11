@@ -5,7 +5,8 @@ import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
 import StoreProvider, { useAppDispatch, useAppSelector } from "@/app/redux";
 import AuthProvider from "./authProvider";
-import { setIsGuestUser } from "@/state";
+import { setIsGuestUser, setIsSidebarCollapsed } from "@/state";
+import useMediaQueryMatch from "@/hooks/useMediaQueryMatch";
 
 export const DashboardLayout = ({
   children,
@@ -22,6 +23,12 @@ export const DashboardLayout = ({
 
   const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
 
+  const isSm = useMediaQueryMatch("sm");
+
+  useEffect(() => {
+    dispatch(setIsGuestUser(isGuest));
+  }, [dispatch, isGuest]);
+
   useEffect(() => {
     if (isDarkMode) {
       document.documentElement.classList.add("dark");
@@ -31,15 +38,16 @@ export const DashboardLayout = ({
   }, [isDarkMode]);
 
   useEffect(() => {
-    dispatch(setIsGuestUser(isGuest));
-  }, [dispatch, isGuest]);
+    if (isSm) dispatch(setIsSidebarCollapsed(true));
+    else dispatch(setIsSidebarCollapsed(false));
+  }, [dispatch, isSm]);
 
   return (
     <div className="flex min-h-screen w-full bg-gray-50 text-gray-900">
       <Sidebar />
       <main
-        className={`flex w-full flex-col bg-gray-50 dark:bg-dark-bg ${
-          isSidebarCollapsed ? "" : "sm:pl-64 md:pl-64"
+        className={`flex w-full flex-col bg-gray-50 transition-all duration-300 dark:bg-dark-bg ${
+          isSidebarCollapsed ? "" : "sm:pl-64"
         }`}
       >
         <Navbar />
