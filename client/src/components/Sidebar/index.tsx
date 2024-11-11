@@ -23,7 +23,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/app/redux";
 import Link from "next/link";
-import { setIsSidebarCollapsed } from "@/state";
+import { setIsGuestUser, setIsSidebarCollapsed } from "@/state";
 import { useGetAuthUserQuery, useGetProjectsQuery } from "@/state/api";
 import { signOut } from "aws-amplify/auth";
 
@@ -38,8 +38,6 @@ const Sidebar = () => {
     (state) => state.global.isSidebarCollapsed,
   );
 
-  console.log("SIDEBAR", isGuest);
-
   const { data: currentUser } = useGetAuthUserQuery(isGuest);
 
   const handleSignOut = async () => {
@@ -48,6 +46,11 @@ const Sidebar = () => {
     } catch (error) {
       console.log("Error signing out: ", error);
     }
+  };
+
+  const handleSignIn = () => {
+    dispatch(setIsGuestUser(false));
+    window.location.reload();
   };
 
   if (!currentUser && !isGuest) return null;
@@ -183,15 +186,24 @@ const Sidebar = () => {
               )}
             </div>
             <span className="mx-3 text-gray-800 dark:text-white">
-              {currentUserDetails?.username}
+              {currentUserDetails ? currentUserDetails.username : "Guest"}
             </span>
           </div>
-          <button
-            className="self-start rounded bg-blue-400 px-4 py-2 text-xs font-bold text-white hover:bg-blue-500 md:block"
-            onClick={handleSignOut}
-          >
-            Sign out
-          </button>
+          {currentUserDetails ? (
+            <button
+              className="self-start rounded bg-blue-400 px-4 py-2 text-xs font-bold text-white hover:bg-blue-500 md:block"
+              onClick={handleSignOut}
+            >
+              Sign out
+            </button>
+          ) : (
+            <button
+              className="self-start rounded bg-blue-400 px-4 py-2 text-xs font-bold text-white hover:bg-blue-500 md:block"
+              onClick={handleSignIn}
+            >
+              Sign in
+            </button>
+          )}
         </div>
       </div>
     </div>

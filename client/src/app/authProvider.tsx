@@ -72,10 +72,11 @@ const AuthProvider = ({
                 className="ml-40"
               >
                 <Image
-                  alt="Amplify logo"
+                  alt="Epok logo"
                   src="https://evok-s3-images.s3.us-east-1.amazonaws.com/logo.png"
                   width={100}
-                  height={50}
+                  height={100}
+                  priority={true}
                 />
               </View>
             );
@@ -85,7 +86,7 @@ const AuthProvider = ({
             return (
               <div>
                 <button
-                  className="hover:bg-auth-btn-hover bg-dark bottom-[0px] my-5 rounded-[4px] border-none bg-black px-3 py-[8.5px] text-base font-semibold text-white"
+                  className="bg-dark bottom-[0px] my-5 rounded-[4px] border-none bg-black px-3 py-[8.5px] text-base font-semibold text-white hover:bg-auth-btn-hover"
                   onClick={() => onHandleIsGuest(true)}
                 >
                   Login as Guest
@@ -94,7 +95,7 @@ const AuthProvider = ({
             );
           },
         }}
-        className="absolute left-[50%] top-[5%] translate-x-[-50%]"
+        className="trns transition-d absolute inset-0 bg-gray-100"
       >
         {({ user }: { user?: AuthUser }) =>
           user ? (

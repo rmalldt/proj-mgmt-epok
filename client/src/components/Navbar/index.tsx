@@ -2,10 +2,11 @@ import React from "react";
 import { Search, Settings, Menu, Sun, Moon, User } from "lucide-react";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/app/redux";
-import { setIsDarkMode, setIsSidebarCollapsed } from "@/state";
+import { setIsDarkMode, setIsGuestUser, setIsSidebarCollapsed } from "@/state";
 import { useGetAuthUserQuery } from "@/state/api";
 import { signOut } from "aws-amplify/auth";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const Navbar = () => {
   const dispatch = useAppDispatch();
@@ -16,8 +17,6 @@ const Navbar = () => {
   const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
   const isGuest = useAppSelector((state) => state.global.isGuest);
 
-  console.log("NAV", isGuest);
-
   const { data: currentUser } = useGetAuthUserQuery(isGuest);
 
   const handleSignOut = async () => {
@@ -26,6 +25,11 @@ const Navbar = () => {
     } catch (error) {
       console.log("Error signing out: ", error);
     }
+  };
+
+  const handleSignIn = () => {
+    dispatch(setIsGuestUser(false));
+    window.location.reload();
   };
 
   if (!currentUser && !isGuest) return null;
@@ -93,14 +97,23 @@ const Navbar = () => {
             )}
           </div>
           <span className="mx-3 text-gray-800 dark:text-white">
-            {currentUserDetails?.username}
+            {currentUserDetails ? currentUserDetails.username : "Guest"}
           </span>
-          <button
-            className="hidden rounded bg-blue-400 px-4 py-2 text-xs font-bold text-white hover:bg-blue-500 md:block"
-            onClick={handleSignOut}
-          >
-            Sign out
-          </button>
+          {currentUserDetails ? (
+            <button
+              className="hidden rounded bg-blue-400 px-4 py-2 text-xs font-bold text-white hover:bg-blue-500 md:block"
+              onClick={handleSignOut}
+            >
+              Sign out
+            </button>
+          ) : (
+            <button
+              className="hidden rounded bg-blue-400 px-4 py-2 text-xs font-bold text-white hover:bg-blue-500 md:block"
+              onClick={handleSignIn}
+            >
+              Sign in
+            </button>
+          )}
         </div>
       </div>
     </div>
