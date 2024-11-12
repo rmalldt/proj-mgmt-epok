@@ -57,8 +57,9 @@ const SearchBar = () => {
         <SearchResultList
           data={searchResults}
           isVisible={isSearchListVisible}
-          handleItemClick={setIsSearchListVisible}
+          searchTerm={searchTerm}
           reference={searchListRef}
+          handleItemClick={setIsSearchListVisible}
         />
       </div>
     </div>
@@ -68,15 +69,17 @@ const SearchBar = () => {
 type SearchResultItemProps = {
   data: SearchResults | undefined;
   isVisible: boolean;
-  handleItemClick: (isVisisble: boolean) => void;
   reference: RefObject<HTMLUListElement>;
+  searchTerm: string;
+  handleItemClick: (isVisisble: boolean) => void;
 };
 
 export const SearchResultList = ({
   data,
   isVisible,
-  handleItemClick,
   reference,
+  searchTerm,
+  handleItemClick,
 }: SearchResultItemProps) => {
   const projects =
     data?.projects && data.projects.length > 0
@@ -115,7 +118,6 @@ export const SearchResultList = ({
       : [];
 
   const searchListItems = [...projects, ...tasks, ...users];
-  console.log("SEARCH DATA", searchListItems);
 
   return isVisible ? (
     <ul
@@ -129,6 +131,7 @@ export const SearchResultList = ({
             id={item.id}
             title={item.title}
             description={item.description}
+            searchTerm={searchTerm}
             handleOnItemClick={handleItemClick}
           />
         ))
@@ -143,15 +146,17 @@ export const SearchResultItem = ({
   id,
   title,
   description,
+  searchTerm,
   handleOnItemClick,
 }: {
   id: string;
   title: string;
   description: string;
+  searchTerm: string;
   handleOnItemClick: (isVisisble: boolean) => void;
 }) => {
   return (
-    <Link href={"/search?query=test"}>
+    <Link href={`/search?query=${searchTerm}`}>
       <li
         className="flex gap-2 border-b"
         onClick={() => handleOnItemClick(false)}

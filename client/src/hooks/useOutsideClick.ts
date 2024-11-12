@@ -8,7 +8,6 @@ const useOutsideClick = (
 
   useEffect(() => {
     const handleClick = ({ target }: MouseEvent) => {
-      console.log(ref);
       if (ref.current && !ref.current.contains(target as Node)) {
         handler();
       }

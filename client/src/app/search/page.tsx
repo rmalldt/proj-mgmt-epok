@@ -16,7 +16,7 @@ function Search() {
     () => searchParams.get("query") || "",
   );
 
-  console.log("SEARCH", searchTerm);
+  console.log("SEARCH", searchParams.get("query"));
 
   const {
     data: searchResults,
@@ -34,6 +34,10 @@ function Search() {
   useEffect(() => {
     return handleSearch.cancel;
   }, [handleSearch.cancel]);
+
+  useEffect(() => {
+    setSearchTerm(searchParams.get("query") || "");
+  }, [searchParams]);
 
   return (
     <div className="p-8">
