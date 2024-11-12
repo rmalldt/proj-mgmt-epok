@@ -7,9 +7,16 @@ import Header from "@/components/Header";
 import TaskCard from "@/components/TaskCard";
 import ProjectCard from "@/components/ProjectCard";
 import UserCard from "@/components/UserCard";
+import { useSearchParams } from "next/navigation";
 
 function Search() {
-  const [searchTerm, setSearchTerm] = useState("");
+  const searchParams = useSearchParams();
+
+  const [searchTerm, setSearchTerm] = useState(
+    () => searchParams.get("query") || "",
+  );
+
+  console.log("SEARCH", searchTerm);
 
   const {
     data: searchResults,

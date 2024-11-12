@@ -8,7 +8,6 @@ import {
   AuthUser,
   fetchAuthSession,
   getCurrentUser,
-  GetCurrentUserOutput,
 } from "aws-amplify/auth";
 
 export interface Project {
