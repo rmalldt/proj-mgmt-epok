@@ -1,6 +1,4 @@
-import Modal from "@/components/Modal";
-import useOutsideClick from "@/hooks/useOutsideClick";
-import { Authenticator, useTheme, View } from "@aws-amplify/ui-react";
+import { Authenticator } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
 import { Amplify } from "aws-amplify";
 import { X } from "lucide-react";

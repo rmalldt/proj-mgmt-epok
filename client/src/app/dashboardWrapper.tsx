@@ -11,7 +11,7 @@ import {
 } from "@/state";
 import useMediaQueryMatch from "@/hooks/useMediaQueryMatch";
 import { Authenticator, useAuthenticator } from "@aws-amplify/ui-react";
-import AuthProvider from "@/app/AuthProvider";
+import AuthModal from "@/components/AuthModal";
 
 export const DashboardLayout = ({
   children,
@@ -51,7 +51,7 @@ export const DashboardLayout = ({
 
   return (
     <div className="flex min-h-screen w-full bg-gray-50 text-gray-900">
-      <AuthProvider
+      <AuthModal
         isOpen={isLoginWindowOpen}
         onClose={() => dispatch(setIsLoginWindowOpen(false))}
       />
