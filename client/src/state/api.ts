@@ -148,11 +148,15 @@ export const api = createApi({
 
         // Request2: Get User data with the current cognito ID from RDS
         // Call the API with Base URL
-        const userDetailsResponse = await fetchWithBQ(`users/${userSub}`);
+        //const userDetailsResponse = await fetchWithBQ(`users/${userSub}`);
+        const userDetailsResponse = await fetchWithBQ(
+          `users/123e4567-e89b-12d3-a456-426614174010`,
+        );
 
         if (userDetailsResponse.error)
           return { error: userDetailsResponse.error };
 
+        console.log("GOT USER DATA");
         return {
           data: {
             user,

@@ -29,7 +29,7 @@ import { signOut } from "aws-amplify/auth";
 import useMediaQueryMatch from "@/hooks/useMediaQueryMatch";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 
-const Sidebar = () => {
+const Sidebar = ({ onLoginWindowOpen }: { onLoginWindowOpen: () => void }) => {
   const [showProjects, setShowProjects] = useState(true);
   const [showPriority, setShowPriority] = useState(true);
 
@@ -54,8 +54,6 @@ const Sidebar = () => {
       console.log("Error signing out: ", error);
     }
   };
-
-  const handleSignIn = () => {};
 
   const currentUserDetails = currentUser?.userDetails;
 
@@ -176,7 +174,7 @@ const Sidebar = () => {
         <div className="z-10 flex w-full flex-col items-center justify-center gap-4 bg-white px-8 py-2 pb-10 dark:bg-black md:hidden">
           <div className="flex w-full items-center">
             <div className="flex h-9 w-9 items-center justify-center">
-              {!!currentUserDetails?.profilePictureUrl ? (
+              {isAuthenticated && !!currentUserDetails?.profilePictureUrl ? (
                 <Image
                   src={`https://evok-s3-images.s3.us-east-1.amazonaws.com/${currentUserDetails?.profilePictureUrl}`}
                   alt={currentUserDetails?.username || "User Profile Picture"}
@@ -189,7 +187,9 @@ const Sidebar = () => {
               )}
             </div>
             <span className="mx-3 text-gray-800 dark:text-white">
-              {currentUserDetails ? currentUserDetails.username : "Guest"}
+              {isAuthenticated && currentUserDetails
+                ? currentUserDetails.username
+                : "Guest"}
             </span>
           </div>
           {isAuthenticated ? (
@@ -202,7 +202,7 @@ const Sidebar = () => {
           ) : (
             <button
               className="self-start rounded bg-blue-400 px-4 py-2 text-xs font-bold text-white hover:bg-blue-500 md:block"
-              onClick={handleSignIn}
+              onClick={onLoginWindowOpen}
             >
               Sign in
             </button>

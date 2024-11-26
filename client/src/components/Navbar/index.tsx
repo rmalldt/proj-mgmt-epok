@@ -78,7 +78,7 @@ const Navbar = ({ onLoginWindowOpen }: { onLoginWindowOpen: () => void }) => {
         <div className="ml-2 mr-5 hidden min-h-[2em] w-[0.1rem] bg-gray-200 md:inline-block"></div>
         <div className="hidden items-center justify-between md:flex">
           <div className="flex h-9 w-9 items-center justify-center">
-            {!!currentUserDetails?.profilePictureUrl ? (
+            {isAuthenticated && !!currentUserDetails?.profilePictureUrl ? (
               <Image
                 src={`https://evok-s3-images.s3.us-east-1.amazonaws.com/${currentUserDetails?.profilePictureUrl}`}
                 alt={currentUserDetails?.username || "User Profile Picture"}
@@ -91,7 +91,9 @@ const Navbar = ({ onLoginWindowOpen }: { onLoginWindowOpen: () => void }) => {
             )}
           </div>
           <span className="mx-3 text-gray-800 dark:text-white">
-            {currentUserDetails ? currentUserDetails.username : "Guest"}
+            {isAuthenticated && currentUserDetails
+              ? currentUserDetails.username
+              : "Guest"}
           </span>
           {isAuthenticated ? (
             <button

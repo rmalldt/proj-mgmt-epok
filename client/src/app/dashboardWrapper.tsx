@@ -44,7 +44,7 @@ export const DashboardLayout = ({
         isOpen={isLoginWindowOpen}
         onClose={() => setIsLoginWindowOpen(false)}
       />
-      <Sidebar />
+      <Sidebar onLoginWindowOpen={() => setIsLoginWindowOpen(true)} />
       <main
         className={`flex w-full flex-col bg-gray-50 transition-all duration-300 dark:bg-dark-bg ${
           isSidebarCollapsed ? "" : "sm:pl-64"
