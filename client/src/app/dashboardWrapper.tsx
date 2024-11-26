@@ -11,7 +11,7 @@ import {
 } from "@/state";
 import useMediaQueryMatch from "@/hooks/useMediaQueryMatch";
 import { Authenticator, useAuthenticator } from "@aws-amplify/ui-react";
-import AuthProvider from "./AuthProvider";
+import AuthProvider from "@/app/AuthProvider";
 
 export const DashboardLayout = ({
   children,
