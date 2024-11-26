@@ -3,11 +3,15 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 export interface InitialStateTypes {
   isSidebarCollapsed: boolean;
   isDarkMode: boolean;
+  isLoginWindowOpen: boolean;
+  isAuthenticated: boolean;
 }
 
 const initialState: InitialStateTypes = {
   isSidebarCollapsed: false,
   isDarkMode: false,
+  isLoginWindowOpen: false,
+  isAuthenticated: false,
 };
 
 /**
@@ -24,9 +28,23 @@ export const globalSlice = createSlice({
     setIsDarkMode: (state, action: PayloadAction<boolean>) => {
       state.isDarkMode = action.payload;
     },
+
+    setIsLoginWindowOpen: (state, action: PayloadAction<boolean>) => {
+      state.isLoginWindowOpen = action.payload;
+    },
+
+    setIsAuthenticated: (state, action: PayloadAction<boolean>) => {
+      state.isAuthenticated = action.payload;
+    },
   },
 });
 
 // Action creators
-export const { setIsSidebarCollapsed, setIsDarkMode } = globalSlice.actions;
+export const {
+  setIsSidebarCollapsed,
+  setIsDarkMode,
+  setIsLoginWindowOpen,
+  setIsAuthenticated,
+} = globalSlice.actions;
+
 export default globalSlice.reducer;

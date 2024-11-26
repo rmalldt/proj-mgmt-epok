@@ -1,6 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import { useAppDispatch, useAppSelector } from "@/app/redux";
+import useMediaQueryMatch from "@/hooks/useMediaQueryMatch";
+import { setIsLoginWindowOpen, setIsSidebarCollapsed } from "@/state";
+import { useGetAuthUserQuery, useGetProjectsQuery } from "@/state/api";
+import { signOut } from "aws-amplify/auth";
 import {
   AlertCircle,
   AlertOctagon,
@@ -20,16 +24,11 @@ import {
   X,
 } from "lucide-react";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
-import { useAppDispatch, useAppSelector } from "@/app/redux";
 import Link from "next/link";
-import { setIsSidebarCollapsed } from "@/state";
-import { useGetAuthUserQuery, useGetProjectsQuery } from "@/state/api";
-import { signOut } from "aws-amplify/auth";
-import useMediaQueryMatch from "@/hooks/useMediaQueryMatch";
-import { useAuthenticator } from "@aws-amplify/ui-react";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
 
-const Sidebar = ({ onLoginWindowOpen }: { onLoginWindowOpen: () => void }) => {
+const Sidebar = () => {
   const [showProjects, setShowProjects] = useState(true);
   const [showPriority, setShowPriority] = useState(true);
 
@@ -38,13 +37,11 @@ const Sidebar = ({ onLoginWindowOpen }: { onLoginWindowOpen: () => void }) => {
   const isSidebarCollapsed = useAppSelector(
     (state) => state.global.isSidebarCollapsed,
   );
+  const isAuthenticated = useAppSelector(
+    (state) => state.global.isAuthenticated,
+  );
 
   const { data: projects } = useGetProjectsQuery();
-
-  const { authStatus } = useAuthenticator((context) => [context.authStatus]);
-
-  const isAuthenticated = authStatus === "authenticated";
-
   const { data: currentUser } = useGetAuthUserQuery(isAuthenticated);
 
   const handleSignOut = async () => {
@@ -85,6 +82,7 @@ const Sidebar = ({ onLoginWindowOpen }: { onLoginWindowOpen: () => void }) => {
             alt="Logo"
             width={50}
             height={50}
+            priority
           />
           <div>
             <h3 className="text-md font-bold uppercase tracking-wide dark:text-gray-200">
@@ -202,7 +200,7 @@ const Sidebar = ({ onLoginWindowOpen }: { onLoginWindowOpen: () => void }) => {
           ) : (
             <button
               className="self-start rounded bg-blue-400 px-4 py-2 text-xs font-bold text-white hover:bg-blue-500 md:block"
-              onClick={onLoginWindowOpen}
+              onClick={() => dispatch(setIsLoginWindowOpen(true))}
             >
               Sign in
             </button>

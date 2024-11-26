@@ -1,8 +1,9 @@
 import React, { useMemo, useState } from "react";
-import { useAppSelector } from "@/app/redux";
+import { useAppDispatch, useAppSelector } from "@/app/redux";
 import { useGetTasksQuery } from "@/state/api";
 import "gantt-task-react/dist/index.css";
 import { DisplayOption, Gantt, ViewMode } from "gantt-task-react";
+import { setIsLoginWindowOpen } from "@/state";
 
 type Props = {
   id: string;
@@ -12,6 +13,7 @@ type Props = {
 type TaskTypeItems = "task" | "milestone" | "project";
 
 const TimelineView = ({ id, setIsModalNewTaskOpen }: Props) => {
+  const dispatch = useAppDispatch();
   const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
   const {
     data: tasks,
@@ -23,6 +25,19 @@ const TimelineView = ({ id, setIsModalNewTaskOpen }: Props) => {
     viewMode: ViewMode.Month,
     locale: "en-GB",
   });
+
+  const isAuthenticated = useAppSelector(
+    (state) => state.global.isAuthenticated,
+  );
+
+  function handleOpenNewTask() {
+    console.log("CLICKED");
+    if (isAuthenticated) {
+      setIsModalNewTaskOpen(true);
+    } else {
+      dispatch(setIsLoginWindowOpen(true));
+    }
+  }
 
   const ganttTasks = useMemo(() => {
     return (
@@ -83,7 +98,7 @@ const TimelineView = ({ id, setIsModalNewTaskOpen }: Props) => {
         <div className="px-4 pb-5 pt-1">
           <button
             className="flex items-center rounded bg-blue-primary px-3 py-2 text-white hover:bg-blue-600"
-            onClick={() => setIsModalNewTaskOpen(true)}
+            onClick={handleOpenNewTask}
           >
             Add New Task
           </button>

@@ -2,6 +2,8 @@ import React from "react";
 import Header from "@/components/Header";
 import { useGetTasksQuery } from "@/state/api";
 import TaskCard from "@/components/TaskCard";
+import { useAppDispatch, useAppSelector } from "@/app/redux";
+import { setIsLoginWindowOpen } from "@/state";
 
 type Props = {
   id: string;
@@ -9,11 +11,26 @@ type Props = {
 };
 
 const ListView = ({ id, setIsModalNewTaskOpen }: Props) => {
+  const dispatch = useAppDispatch();
+
   const {
     data: tasks,
     isLoading,
     error,
   } = useGetTasksQuery({ projectId: Number(id) });
+
+  const isAuthenticated = useAppSelector(
+    (state) => state.global.isAuthenticated,
+  );
+
+  function handleOpenNewTask() {
+    console.log("CLICKED");
+    if (isAuthenticated) {
+      setIsModalNewTaskOpen(true);
+    } else {
+      dispatch(setIsLoginWindowOpen(true));
+    }
+  }
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>An error occured while fetching tasks</div>;
@@ -26,7 +43,7 @@ const ListView = ({ id, setIsModalNewTaskOpen }: Props) => {
           buttonComponent={
             <button
               className="flex items-center rounded bg-blue-primary px-3 py-2 text-white hover:bg-blue-600"
-              onClick={() => setIsModalNewTaskOpen(true)}
+              onClick={handleOpenNewTask}
             >
               Add Task
             </button>

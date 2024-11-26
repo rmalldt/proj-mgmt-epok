@@ -61,10 +61,10 @@ const AuthProvider = ({
           return (
             <div className="flex justify-end rounded-se-md rounded-ss-md bg-black p-3">
               <button
-                className="flex h-7 w-7 items-center justify-center rounded-full bg-slate-600 text-white hover:bg-blue-600"
+                className="flex h-7 w-7 items-center justify-center rounded-full bg-black text-white hover:bg-slate-600"
                 onClick={() => onClose()}
               >
-                <X size={18} />
+                <X size={20} />
               </button>
             </div>
           );

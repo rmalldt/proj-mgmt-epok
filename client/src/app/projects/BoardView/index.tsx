@@ -15,6 +15,8 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { EllipsisVertical, MessageSquareMore, Plus } from "lucide-react";
 import { format } from "date-fns";
 import Image from "next/image";
+import { useAppDispatch, useAppSelector } from "@/app/redux";
+import { setIsLoginWindowOpen } from "@/state";
 
 interface StatusColors {
   [prop: string]: string;
@@ -76,6 +78,8 @@ function TaskColumn({
   moveTask,
   setIsModalNewTaskOpen,
 }: TaskColumnProps) {
+  const dispatch = useAppDispatch();
+
   // https://react-dnd.github.io/react-dnd/docs/api/use-drop
   const [{ isOver }, drop] = useDrop(() => ({
     accept: "task",
@@ -91,6 +95,19 @@ function TaskColumn({
     "Under Review": "#D97706",
     Completed: "#000000",
   };
+
+  const isAuthenticated = useAppSelector(
+    (state) => state.global.isAuthenticated,
+  );
+
+  function handleOpenNewTask() {
+    console.log("CLICKED");
+    if (isAuthenticated) {
+      setIsModalNewTaskOpen(true);
+    } else {
+      dispatch(setIsLoginWindowOpen(true));
+    }
+  }
 
   return (
     <div
@@ -118,7 +135,7 @@ function TaskColumn({
             </button>
             <button
               className="flex h-6 w-6 items-center justify-center rounded bg-gray-200 dark:bg-dark-tertiary dark:text-white"
-              onClick={() => setIsModalNewTaskOpen(true)}
+              onClick={handleOpenNewTask}
             >
               <Plus size={16} />
             </button>

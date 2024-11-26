@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Header from "@/components/Header";
 import { Clock, Grid3X3, List, PlusSquare, Table } from "lucide-react";
 import ModalNewProject from "./ModalNewProject";
+import { useAppDispatch, useAppSelector } from "../redux";
+import { setIsLoginWindowOpen } from "@/state";
 
 type Props = {
   activeTab: string;
@@ -10,6 +12,21 @@ type Props = {
 
 const ProjectHeader = ({ activeTab, setActiveTab }: Props) => {
   const [isModalNewProjectOpen, setIsModalNewProjectOpen] = useState(false);
+
+  const dispatch = useAppDispatch();
+
+  const isAuthenticated = useAppSelector(
+    (state) => state.global.isAuthenticated,
+  );
+
+  function handleOpenNewProject() {
+    if (isAuthenticated) {
+      setIsModalNewProjectOpen(true);
+    } else {
+      dispatch(setIsLoginWindowOpen(true));
+    }
+  }
+
   return (
     <div className="px-4 xl:px-6">
       {/* MODAL NEW PROJECT */}
@@ -24,7 +41,7 @@ const ProjectHeader = ({ activeTab, setActiveTab }: Props) => {
           buttonComponent={
             <button
               className="flex items-center rounded-md bg-blue-primary px-3 py-2 text-white hover:bg-blue-600"
-              onClick={() => setIsModalNewProjectOpen(true)}
+              onClick={handleOpenNewProject}
             >
               <PlusSquare className="mr-2 h-5 w-5" />
               New Boards

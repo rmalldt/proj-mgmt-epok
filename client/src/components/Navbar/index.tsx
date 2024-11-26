@@ -1,30 +1,28 @@
 import { useAppDispatch, useAppSelector } from "@/app/redux";
-import { setIsDarkMode, setIsSidebarCollapsed } from "@/state";
+import {
+  setIsDarkMode,
+  setIsLoginWindowOpen,
+  setIsSidebarCollapsed,
+} from "@/state";
 import { useGetAuthUserQuery } from "@/state/api";
-import { useAuthenticator } from "@aws-amplify/ui-react";
 import { signOut } from "aws-amplify/auth";
 import { Menu, Moon, Settings, Sun, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import SearchBar from "../Searchbar";
 
-const Navbar = ({ onLoginWindowOpen }: { onLoginWindowOpen: () => void }) => {
+const Navbar = () => {
   const dispatch = useAppDispatch();
 
   const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
   const isSidebarCollapsed = useAppSelector(
     (state) => state.global.isSidebarCollapsed,
   );
-
-  const { authStatus } = useAuthenticator((context) => [context.authStatus]);
-
-  const isAuthenticated = authStatus === "authenticated";
-
-  console.log("AUTH_STATUS", isAuthenticated);
+  const isAuthenticated = useAppSelector(
+    (state) => state.global.isAuthenticated,
+  );
 
   const { data: currentUser } = useGetAuthUserQuery(isAuthenticated);
-
-  console.log("CUR_USER", currentUser);
 
   const handleSignOut = async () => {
     try {
@@ -105,7 +103,7 @@ const Navbar = ({ onLoginWindowOpen }: { onLoginWindowOpen: () => void }) => {
           ) : (
             <button
               className="hidden rounded bg-blue-400 px-4 py-2 text-xs font-bold text-white hover:bg-blue-500 md:block"
-              onClick={onLoginWindowOpen}
+              onClick={() => dispatch(setIsLoginWindowOpen(true))}
             >
               Sign in
             </button>
