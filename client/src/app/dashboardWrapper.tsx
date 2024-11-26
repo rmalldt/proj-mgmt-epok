@@ -12,6 +12,7 @@ import {
 import useMediaQueryMatch from "@/hooks/useMediaQueryMatch";
 import { Authenticator, useAuthenticator } from "@aws-amplify/ui-react";
 import AuthModal from "@/components/AuthModal";
+import Spinner from "@/components/Spinner";
 
 export const DashboardLayout = ({
   children,
@@ -73,7 +74,17 @@ export const DashboardLayout = ({
  * in the DashboardLayout and also make the states accessible to the entire app.
  */
 const DashboardWrapper = ({ children }: { children: React.ReactNode }) => {
-  return (
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 3000);
+  }, []);
+
+  return isLoading ? (
+    <Spinner />
+  ) : (
     <StoreProvider>
       <Authenticator.Provider>
         <DashboardLayout>{children}</DashboardLayout>

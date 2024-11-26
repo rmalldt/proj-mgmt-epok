@@ -77,9 +77,11 @@ function PriorityPage({ priority }: Props) {
   const [view, setView] = useState("list");
   const [isModelNewTaskOpen, setIsModelNewTaskOpen] = useState(false);
 
-  const isGuest = useAppSelector((state) => state.global.isGuest);
+  const isAuthenticated = useAppSelector(
+    (state) => state.global.isAuthenticated,
+  );
 
-  const { data: currentUser } = useGetAuthUserQuery(isGuest);
+  const { data: currentUser } = useGetAuthUserQuery(isAuthenticated);
   const userId = currentUser?.userDetails?.userId ?? null;
 
   const {
