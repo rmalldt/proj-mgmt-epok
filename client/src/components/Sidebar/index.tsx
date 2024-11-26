@@ -2,6 +2,7 @@
 
 import { useAppDispatch, useAppSelector } from "@/app/redux";
 import useMediaQueryMatch from "@/hooks/useMediaQueryMatch";
+import useOutsideClick from "@/hooks/useOutsideClick";
 import { setIsLoginWindowOpen, setIsSidebarCollapsed } from "@/state";
 import { useGetAuthUserQuery, useGetProjectsQuery } from "@/state/api";
 import { signOut } from "aws-amplify/auth";
@@ -26,13 +27,19 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import React, { useState } from "react";
 
 const Sidebar = () => {
   const [showProjects, setShowProjects] = useState(true);
   const [showPriority, setShowPriority] = useState(true);
 
   const dispatch = useAppDispatch();
+
+  const isSm = useMediaQueryMatch("sm");
+
+  const sidebarRef = useOutsideClick(
+    handleOutsideClick,
+  ) as React.RefObject<HTMLDivElement>;
 
   const isSidebarCollapsed = useAppSelector(
     (state) => state.global.isSidebarCollapsed,
@@ -43,6 +50,7 @@ const Sidebar = () => {
 
   const { data: projects } = useGetProjectsQuery();
   const { data: currentUser } = useGetAuthUserQuery(isAuthenticated);
+  const currentUserDetails = currentUser?.userDetails;
 
   const handleSignOut = async () => {
     try {
@@ -52,10 +60,15 @@ const Sidebar = () => {
     }
   };
 
-  const currentUserDetails = currentUser?.userDetails;
+  function handleOutsideClick() {
+    if (isSm) {
+      dispatch(setIsSidebarCollapsed(true));
+    }
+  }
 
   return (
     <div
+      ref={sidebarRef}
       className={`fixed z-40 flex h-full flex-col justify-between overflow-y-auto bg-white shadow-xl transition-all duration-300 dark:bg-black ${isSidebarCollapsed ? "hidden w-0" : "w-64"} `}
     >
       <div className="flex h-full flex-col justify-start">
