@@ -17,7 +17,10 @@ const SearchBar = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isSearchListVisible, setIsSearchListVisible] = useState(false);
 
-  const searchListRef = useOutsideClick(handleOutsideClick, true);
+  const searchListRef = useOutsideClick(
+    handleOutsideClick,
+    true,
+  ) as React.RefObject<HTMLUListElement>;
 
   function handleOutsideClick() {
     if (!searchListRef.current) return;

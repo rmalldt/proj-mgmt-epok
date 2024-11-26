@@ -1,10 +1,10 @@
 import React, { useEffect, useRef } from "react";
 
-const useOutsideClick = (
+const useOutsideClick = <T extends HTMLElement>(
   handler: () => void,
   listenOnCapture: boolean = false,
 ) => {
-  const ref = useRef<HTMLUListElement>(null);
+  const ref = useRef<T>(null);
 
   useEffect(() => {
     const handleClick = ({ target }: MouseEvent) => {

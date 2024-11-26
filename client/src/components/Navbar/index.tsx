@@ -1,24 +1,30 @@
-import React from "react";
-import { Search, Settings, Menu, Sun, Moon, User } from "lucide-react";
-import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/app/redux";
-import { setIsDarkMode, setIsGuestUser, setIsSidebarCollapsed } from "@/state";
+import { setIsDarkMode, setIsSidebarCollapsed } from "@/state";
 import { useGetAuthUserQuery } from "@/state/api";
+import { useAuthenticator } from "@aws-amplify/ui-react";
 import { signOut } from "aws-amplify/auth";
+import { Menu, Moon, Settings, Sun, User } from "lucide-react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import SearchBar from "../Searchbar";
 
-const Navbar = () => {
+const Navbar = ({ onLoginWindowOpen }: { onLoginWindowOpen: () => void }) => {
   const dispatch = useAppDispatch();
 
+  const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
   const isSidebarCollapsed = useAppSelector(
     (state) => state.global.isSidebarCollapsed,
   );
-  const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
-  const isGuest = useAppSelector((state) => state.global.isGuest);
 
-  const { data: currentUser } = useGetAuthUserQuery(isGuest);
+  const { authStatus } = useAuthenticator((context) => [context.authStatus]);
+
+  const isAuthenticated = authStatus === "authenticated";
+
+  console.log("AUTH_STATUS", isAuthenticated);
+
+  const { data: currentUser } = useGetAuthUserQuery(isAuthenticated);
+
+  console.log("CUR_USER", currentUser);
 
   const handleSignOut = async () => {
     try {
@@ -28,12 +34,6 @@ const Navbar = () => {
     }
   };
 
-  const handleSignIn = () => {
-    dispatch(setIsGuestUser(false));
-    window.location.reload();
-  };
-
-  if (!currentUser && !isGuest) return null;
   const currentUserDetails = currentUser?.userDetails;
 
   return (
@@ -93,7 +93,7 @@ const Navbar = () => {
           <span className="mx-3 text-gray-800 dark:text-white">
             {currentUserDetails ? currentUserDetails.username : "Guest"}
           </span>
-          {currentUserDetails ? (
+          {isAuthenticated ? (
             <button
               className="hidden rounded bg-blue-400 px-4 py-2 text-xs font-bold text-white hover:bg-blue-500 md:block"
               onClick={handleSignOut}
@@ -103,7 +103,7 @@ const Navbar = () => {
           ) : (
             <button
               className="hidden rounded bg-blue-400 px-4 py-2 text-xs font-bold text-white hover:bg-blue-500 md:block"
-              onClick={handleSignIn}
+              onClick={onLoginWindowOpen}
             >
               Sign in
             </button>

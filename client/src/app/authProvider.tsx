@@ -1,15 +1,10 @@
-import {
-  Authenticator,
-  AuthenticatorProps,
-  useTheme,
-  View,
-} from "@aws-amplify/ui-react";
-import { Amplify } from "aws-amplify";
-import { AuthUser } from "aws-amplify/auth";
-import React, { useState } from "react";
+import Modal from "@/components/Modal";
+import useOutsideClick from "@/hooks/useOutsideClick";
+import { Authenticator, useTheme, View } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
-import Link from "next/link";
-import Image from "next/image";
+import { Amplify } from "aws-amplify";
+import { X } from "lucide-react";
+import { createPortal } from "react-dom";
 
 Amplify.configure({
   Auth: {
@@ -51,63 +46,33 @@ const formFields = {
 };
 
 const AuthProvider = ({
-  children,
-  onHandleIsGuest,
+  isOpen,
+  onClose,
 }: {
-  children: React.ReactNode;
-  onHandleIsGuest: (isGuest: boolean) => void;
+  isOpen: boolean;
+  onClose: () => void;
 }) => {
-  return (
-    <div>
-      <Authenticator
-        formFields={formFields}
-        components={{
-          Header() {
-            const { tokens } = useTheme();
-
-            return (
-              <View
-                textAlign="center"
-                padding={tokens.space.large}
-                className="absolute left-[50%] -mt-40 -translate-x-[50%]"
+  if (!isOpen) return null;
+  return createPortal(
+    <Authenticator
+      formFields={formFields}
+      components={{
+        Header() {
+          return (
+            <div className="flex justify-end rounded-se-md rounded-ss-md bg-black p-3">
+              <button
+                className="flex h-7 w-7 items-center justify-center rounded-full bg-slate-600 text-white hover:bg-blue-600"
+                onClick={() => onClose()}
               >
-                <Image
-                  alt="Epok logo"
-                  src="https://evok-s3-images.s3.us-east-1.amazonaws.com/logo.png"
-                  width={100}
-                  height={100}
-                  priority={true}
-                />
-              </View>
-            );
-          },
-          Footer() {
-            const { tokens } = useTheme();
-            return (
-              <div>
-                <button
-                  className="bg-dark bottom-[0px] my-5 rounded-[4px] border-none bg-black px-3 py-[8.5px] text-base font-semibold text-white hover:bg-auth-btn-hover"
-                  onClick={() => onHandleIsGuest(true)}
-                >
-                  Login as Guest
-                </button>
-              </div>
-            );
-          },
-        }}
-        className="trns transition-d absolute inset-0 bg-gray-100"
-      >
-        {({ user }: { user?: AuthUser }) =>
-          user ? (
-            <div>{children}</div>
-          ) : (
-            <div>
-              <h1>Please sign:</h1>
+                <X size={18} />
+              </button>
             </div>
-          )
-        }
-      </Authenticator>
-    </div>
+          );
+        },
+      }}
+      className="fixed inset-0 z-50 flex h-full w-full items-center justify-center overflow-y-auto bg-gray-600 bg-opacity-50 p-4 backdrop-blur-sm"
+    />,
+    document.body,
   );
 };
 

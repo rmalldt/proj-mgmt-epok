@@ -112,15 +112,22 @@ export const api = createApi({
   tagTypes: ["Projects", "Tasks", "Users", "Teams"], // tags to identify cached data on FE used to invalidate cached data later
   endpoints: (build) => ({
     getAuthUser: build.query<UserAuthInfo, boolean>({
-      queryFn: async (isGuest, _queryApi, _extraoptions, fetchWithBQ) => {
-        if (isGuest)
+      queryFn: async (
+        isAuthenticated,
+        _queryApi,
+        _extraoptions,
+        fetchWithBQ,
+      ) => {
+        if (!isAuthenticated) {
+          console.log("RETURNED");
           return {
             error: {
               data: "",
               status: 401,
-              statusText: "",
+              statusText: "Not Authenticated",
             },
           };
+        }
 
         // Request1: Get current user and user session from Cognito User Pool
         // Call the API with Cognito User Pool ID URL

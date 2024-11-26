@@ -16,7 +16,7 @@ const ModalNewProject = ({ isOpen, onClose }: Props) => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
-  const handleSumbit = async () => {
+  const handleSubmit = async () => {
     if (!projectName || !startDate || !endDate) return;
 
     const formattedStartDate = formatISO(new Date(startDate), {
@@ -52,7 +52,7 @@ const ModalNewProject = ({ isOpen, onClose }: Props) => {
         className="mt-4 space-y-6"
         onSubmit={(e) => {
           e.preventDefault();
-          handleSumbit();
+          handleSubmit();
         }}
       >
         <input

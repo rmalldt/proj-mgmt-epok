@@ -23,23 +23,29 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/app/redux";
 import Link from "next/link";
-import { setIsGuestUser, setIsSidebarCollapsed } from "@/state";
+import { setIsSidebarCollapsed } from "@/state";
 import { useGetAuthUserQuery, useGetProjectsQuery } from "@/state/api";
 import { signOut } from "aws-amplify/auth";
 import useMediaQueryMatch from "@/hooks/useMediaQueryMatch";
+import { useAuthenticator } from "@aws-amplify/ui-react";
 
 const Sidebar = () => {
   const [showProjects, setShowProjects] = useState(true);
   const [showPriority, setShowPriority] = useState(true);
 
-  const isGuest = useAppSelector((state) => state.global.isGuest);
-  const { data: projects } = useGetProjectsQuery();
   const dispatch = useAppDispatch();
+
   const isSidebarCollapsed = useAppSelector(
     (state) => state.global.isSidebarCollapsed,
   );
 
-  const { data: currentUser } = useGetAuthUserQuery(isGuest);
+  const { data: projects } = useGetProjectsQuery();
+
+  const { authStatus } = useAuthenticator((context) => [context.authStatus]);
+
+  const isAuthenticated = authStatus === "authenticated";
+
+  const { data: currentUser } = useGetAuthUserQuery(isAuthenticated);
 
   const handleSignOut = async () => {
     try {
@@ -49,12 +55,8 @@ const Sidebar = () => {
     }
   };
 
-  const handleSignIn = () => {
-    dispatch(setIsGuestUser(false));
-    window.location.reload();
-  };
+  const handleSignIn = () => {};
 
-  if (!currentUser && !isGuest) return null;
   const currentUserDetails = currentUser?.userDetails;
 
   return (
@@ -190,7 +192,7 @@ const Sidebar = () => {
               {currentUserDetails ? currentUserDetails.username : "Guest"}
             </span>
           </div>
-          {currentUserDetails ? (
+          {isAuthenticated ? (
             <button
               className="self-start rounded bg-blue-400 px-4 py-2 text-xs font-bold text-white hover:bg-blue-500 md:block"
               onClick={handleSignOut}

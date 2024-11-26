@@ -4,17 +4,18 @@ import React, { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
 import StoreProvider, { useAppDispatch, useAppSelector } from "@/app/redux";
-import AuthProvider from "./authProvider";
-import { setIsGuestUser, setIsSidebarCollapsed } from "@/state";
+import { setIsSidebarCollapsed } from "@/state";
 import useMediaQueryMatch from "@/hooks/useMediaQueryMatch";
+import { Authenticator } from "@aws-amplify/ui-react";
+import AuthProvider from "./AuthProvider";
 
 export const DashboardLayout = ({
   children,
-  isGuest,
 }: {
   children: React.ReactNode;
-  isGuest: boolean;
 }) => {
+  const [isLoginWindowOpen, setIsLoginWindowOpen] = useState(false);
+
   const dispatch = useAppDispatch();
 
   const isSidebarCollapsed = useAppSelector(
@@ -22,12 +23,7 @@ export const DashboardLayout = ({
   );
 
   const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
-
   const isSm = useMediaQueryMatch("sm");
-
-  useEffect(() => {
-    dispatch(setIsGuestUser(isGuest));
-  }, [dispatch, isGuest]);
 
   useEffect(() => {
     if (isDarkMode) {
@@ -44,13 +40,17 @@ export const DashboardLayout = ({
 
   return (
     <div className="flex min-h-screen w-full bg-gray-50 text-gray-900">
+      <AuthProvider
+        isOpen={isLoginWindowOpen}
+        onClose={() => setIsLoginWindowOpen(false)}
+      />
       <Sidebar />
       <main
         className={`flex w-full flex-col bg-gray-50 transition-all duration-300 dark:bg-dark-bg ${
           isSidebarCollapsed ? "" : "sm:pl-64"
         }`}
       >
-        <Navbar />
+        <Navbar onLoginWindowOpen={() => setIsLoginWindowOpen(true)} />
         {children}
       </main>
     </div>
@@ -62,17 +62,11 @@ export const DashboardLayout = ({
  * in the DashboardLayout and also make the states accessible to the entire app.
  */
 const DashboardWrapper = ({ children }: { children: React.ReactNode }) => {
-  const [isGuest, setIsGuest] = useState(false);
-
-  return isGuest ? (
+  return (
     <StoreProvider>
-      <DashboardLayout isGuest={isGuest}>{children}</DashboardLayout>
-    </StoreProvider>
-  ) : (
-    <StoreProvider>
-      <AuthProvider onHandleIsGuest={setIsGuest}>
-        <DashboardLayout isGuest={isGuest}>{children}</DashboardLayout>
-      </AuthProvider>
+      <Authenticator.Provider>
+        <DashboardLayout>{children}</DashboardLayout>
+      </Authenticator.Provider>
     </StoreProvider>
   );
 };
