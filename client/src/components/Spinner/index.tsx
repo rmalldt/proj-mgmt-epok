@@ -4,7 +4,7 @@ import React from "react";
 function Spinner() {
   return (
     <div className="flex h-lvh w-full items-center justify-center bg-white dark:bg-dark-bg">
-      <div className="fade animate-fadein relative bg-slate-100">
+      <div className="fade animate-fadeout relative bg-slate-100">
         <Image
           src="https://evok-s3-images.s3.us-east-1.amazonaws.com/logo.png"
           alt="Logo"
@@ -12,7 +12,7 @@ function Spinner() {
           height={100}
           priority
         />
-        <div className="loader animate-fadein absolute left-[50%] mt-20 translate-x-[-50%]"></div>
+        <div className="loader animate-fadeout absolute left-[50%] mt-20 translate-x-[-50%]"></div>
       </div>
     </div>
   );

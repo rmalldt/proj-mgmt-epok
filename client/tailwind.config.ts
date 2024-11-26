@@ -47,16 +47,16 @@ const config: Config = {
         },
         "fade-out": {
           "0%": {
-            opacity: "0",
+            opacity: "1",
           },
           "100%": {
-            opacity: "1",
+            opacity: "0",
           },
         },
       },
       animation: {
         fadein: "fade-in 3s ease-in-out 0.25s 1",
-        fadeout: "fade-out 1s ease-out 0.25s 1",
+        fadeout: "fade-out 3s ease-out 0.25s 1",
       },
     },
   },
